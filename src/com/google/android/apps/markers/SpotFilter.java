@@ -16,7 +16,6 @@
 
 package com.google.android.apps.markers;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import android.view.MotionEvent;

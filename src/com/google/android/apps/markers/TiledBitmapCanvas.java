@@ -1,7 +1,6 @@
 package com.google.android.apps.markers;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,8 +10,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.FloatMath;
 import android.util.Log;
+import java.lang.Math;
 
 public class TiledBitmapCanvas implements CanvasLite {
     public static final boolean DEBUG = false;
@@ -243,10 +242,10 @@ public class TiledBitmapCanvas implements CanvasLite {
     }
 
     public void drawRect(float l, float t, float r, float b, Paint paint) {
-        final int tilel = max(0,(int)FloatMath.floor((l-INVALIDATE_PADDING) / mTileSize));
-        final int tilet = max(0,(int)FloatMath.floor((t-INVALIDATE_PADDING) / mTileSize));
-        final int tiler = min(mTilesX-1, (int)FloatMath.floor((r+INVALIDATE_PADDING) / mTileSize));
-        final int tileb = min(mTilesY-1, (int)FloatMath.floor((b+INVALIDATE_PADDING) / mTileSize));
+        final int tilel = max(0,(int)Math.floor((l-INVALIDATE_PADDING) / mTileSize));
+        final int tilet = max(0,(int)Math.floor((t-INVALIDATE_PADDING) / mTileSize));
+        final int tiler = min(mTilesX-1, (int)Math.floor((r+INVALIDATE_PADDING) / mTileSize));
+        final int tileb = min(mTilesY-1, (int)Math.floor((b+INVALIDATE_PADDING) / mTileSize));
         for (int tiley = tilet; tiley <= tileb; tiley++) {
             for (int tilex = tilel; tilex <= tiler; tilex++) {
                 final Tile tile = mTiles[tiley*mTilesX + tilex];
@@ -258,10 +257,10 @@ public class TiledBitmapCanvas implements CanvasLite {
 
     public void drawCircle(float x, float y, float r, Paint paint) {
         final float invalR = r + INVALIDATE_PADDING;
-        final int tilel = max(0, (int)FloatMath.floor((x-invalR) / mTileSize));
-        final int tilet = max(0, (int)FloatMath.floor((y-invalR) / mTileSize));
-        final int tiler = min(mTilesX-1, (int)FloatMath.floor((x+invalR) / mTileSize));
-        final int tileb = min(mTilesY-1, (int)FloatMath.floor((y+invalR) / mTileSize));
+        final int tilel = max(0, (int)Math.floor((x-invalR) / mTileSize));
+        final int tilet = max(0, (int)Math.floor((y-invalR) / mTileSize));
+        final int tiler = min(mTilesX-1, (int)Math.floor((x+invalR) / mTileSize));
+        final int tileb = min(mTilesY-1, (int)Math.floor((y+invalR) / mTileSize));
         for (int tiley = tilet; tiley <= tileb; tiley++) {
             for (int tilex = tilel; tilex <= tiler; tilex++) {
                 final Tile tile = mTiles[tiley*mTilesX + tilex];
@@ -281,10 +280,10 @@ public class TiledBitmapCanvas implements CanvasLite {
 
     @Override
     public void drawBitmap(Bitmap bitmap, Rect src, RectF dst, Paint paint) {
-        final int tilel = max(0,(int)FloatMath.floor((dst.left-INVALIDATE_PADDING) / mTileSize));
-        final int tilet = max(0,(int)FloatMath.floor((dst.top-INVALIDATE_PADDING) / mTileSize));
-        final int tiler = min(mTilesX-1, (int)FloatMath.floor((dst.right+INVALIDATE_PADDING) / mTileSize));
-        final int tileb = min(mTilesY-1, (int)FloatMath.floor((dst.bottom+INVALIDATE_PADDING) / mTileSize));
+        final int tilel = max(0,(int)Math.floor((dst.left-INVALIDATE_PADDING) / mTileSize));
+        final int tilet = max(0,(int)Math.floor((dst.top-INVALIDATE_PADDING) / mTileSize));
+        final int tiler = min(mTilesX-1, (int)Math.floor((dst.right+INVALIDATE_PADDING) / mTileSize));
+        final int tileb = min(mTilesY-1, (int)Math.floor((dst.bottom+INVALIDATE_PADDING) / mTileSize));
         for (int tiley = tilet; tiley <= tileb; tiley++) {
             for (int tilex = tilel; tilex <= tiler; tilex++) {
                 final Tile tile = mTiles[tiley*mTilesX + tilex];
@@ -298,10 +297,10 @@ public class TiledBitmapCanvas implements CanvasLite {
     public void drawBitmap(Bitmap bitmap, Matrix matrix, Paint paint) {
         RectF dst = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
         matrix.mapRect(dst);
-        final int tilel = max(0,(int)FloatMath.floor((dst.left-INVALIDATE_PADDING) / mTileSize));
-        final int tilet = max(0,(int)FloatMath.floor((dst.top-INVALIDATE_PADDING) / mTileSize));
-        final int tiler = min(mTilesX-1, (int)FloatMath.floor((dst.right+INVALIDATE_PADDING) / mTileSize));
-        final int tileb = min(mTilesY-1, (int)FloatMath.floor((dst.bottom+INVALIDATE_PADDING) / mTileSize));
+        final int tilel = max(0,(int)Math.floor((dst.left-INVALIDATE_PADDING) / mTileSize));
+        final int tilet = max(0,(int)Math.floor((dst.top-INVALIDATE_PADDING) / mTileSize));
+        final int tiler = min(mTilesX-1, (int)Math.floor((dst.right+INVALIDATE_PADDING) / mTileSize));
+        final int tileb = min(mTilesY-1, (int)Math.floor((dst.bottom+INVALIDATE_PADDING) / mTileSize));
         for (int tiley = tilet; tiley <= tileb; tiley++) {
             for (int tilex = tilel; tilex <= tiler; tilex++) {
                 final Tile tile = mTiles[tiley*mTilesX + tilex];

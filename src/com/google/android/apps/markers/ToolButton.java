@@ -16,6 +16,7 @@
 
 package com.google.android.apps.markers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -29,14 +30,11 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.accessibility.AccessibilityEvent;
 
 import org.dsandler.apps.markers.R;
 
@@ -351,6 +349,7 @@ public class ToolButton extends View {
         setSelected(true);
     }
     
+    @SuppressLint("NewApi")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getAction();

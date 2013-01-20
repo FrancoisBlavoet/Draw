@@ -18,10 +18,7 @@ package com.google.android.apps.markers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.CharBuffer;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -30,7 +27,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;

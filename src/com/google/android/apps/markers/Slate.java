@@ -16,8 +16,6 @@
 
 package com.google.android.apps.markers;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -132,7 +130,7 @@ public class Slate extends View {
         @Override
         public void plot(Spot s) {
             final float pressureNorm;
-        
+
             if (ASSUME_STYLUS_CALIBRATED && s.tool == MotionEvent.TOOL_TYPE_STYLUS) {
                 pressureNorm = s.pressure;
             } else {
@@ -761,6 +759,10 @@ public class Slate extends View {
         long time = event.getEventTime();
 
         mEmpty = false;
+         
+        
+
+        
 
         // starting a new touch? commit the previous state of the canvas
         if (action == MotionEvent.ACTION_DOWN) {
