@@ -354,6 +354,19 @@ public class ToolButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getAction();
         
+		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_ERASER)
+		{
+			Log.i("TEST", "eraser");
+		}
+		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS)
+		{
+			Log.i("TEST", "stylus");
+		}
+		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_FINGER)
+		{
+			Log.i("TEST", "finger");
+		}
+        
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (Slate.DEBUG) Log.d(Slate.TAG, "DOWN on " + ToolButton.this + " lph=" + mLongPressHandler);

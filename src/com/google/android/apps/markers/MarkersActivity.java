@@ -387,8 +387,6 @@ public class MarkersActivity extends Activity
         });
         mLastColor = mActiveColor;
         if (mActiveColor != null) mActiveColor.click();
-
-        setHUDVisibility(mPrefs.getBoolean(PREF_LAST_HUDSTATE, false), false);
     }
 
     @Override
@@ -464,105 +462,13 @@ public class MarkersActivity extends Activity
     protected void onRestoreInstanceState(Bundle icicle) {
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            setHUDVisibility(!getHUDVisibility(), true);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+
 
     final static boolean hasAnimations() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB);
     }
 
-    public void clickLogo(View v) {
-        setHUDVisibility(!getHUDVisibility(), true);
-    }
 
-    public boolean getHUDVisibility() {
-        return mActionBarView.getVisibility() == View.VISIBLE;
-    }
-
-    @TargetApi(11)
-    public void setHUDVisibility(boolean show, boolean animate) {
-        if (!show) {
-            if (hasAnimations() && animate) {
-                AnimatorSet a = new AnimatorSet();
-                AnimatorSet.Builder b = 
-                        a.play(ObjectAnimator.ofFloat(mLogoView, "alpha", 1f, 0.5f))
-                         .with(ObjectAnimator.ofFloat(mActionBarView, "alpha", 1f, 0f));
-                if (mComboHudView != null) {
-                    b.with(ObjectAnimator.ofFloat(mComboHudView, "alpha", 1f, 0f));
-                } else {
-                    b.with(ObjectAnimator.ofFloat(mColorsView, "alpha", 1f, 0f))
-                     .with(ObjectAnimator.ofFloat(mToolsView, "alpha", 1f, 0f));
-                }
-                a.addListener(new AnimatorListenerAdapter() {
-                    public void onAnimationEnd(Animator a) {
-                        if (mComboHudView != null) {
-                            mComboHudView.setVisibility(View.GONE);
-                            mComboHudView.setLayerType(View.LAYER_TYPE_NONE, null);
-                        } else {
-                            mColorsView.setVisibility(View.GONE);
-                            mToolsView.setVisibility(View.GONE);
-                        }
-                        mActionBarView.setVisibility(View.GONE);
-                    }
-                });
-                a.start();
-            } else {
-                if (mComboHudView != null) {
-                    mComboHudView.setVisibility(View.GONE);
-                } else {
-                    mColorsView.setVisibility(View.GONE);
-                    mToolsView.setVisibility(View.GONE);
-                }
-                mActionBarView.setVisibility(View.GONE);
-                if (hasAnimations()) {
-                    mLogoView.setAlpha(0.5f);
-                }
-            }
-        } else {
-            if (mComboHudView != null) {
-                mComboHudView.setVisibility(View.VISIBLE);
-            } else {
-                mColorsView.setVisibility(View.VISIBLE);
-                mToolsView.setVisibility(View.VISIBLE);
-            }
-            mActionBarView.setVisibility(View.VISIBLE);
-            if (hasAnimations() && animate) {
-                AnimatorSet a = new AnimatorSet();
-                AnimatorSet.Builder b = 
-                        a.play(ObjectAnimator.ofFloat(mLogoView, "alpha", 0.5f, 1f))
-                         .with(ObjectAnimator.ofFloat(mActionBarView, "alpha", 0f, 1f));
-                if (mComboHudView != null) {
-                    b.with(ObjectAnimator.ofFloat(mComboHudView, "alpha", 0f, 1f));
-                } else {
-                    b.with(ObjectAnimator.ofFloat(mColorsView, "alpha", 0f, 1f))
-                     .with(ObjectAnimator.ofFloat(mToolsView, "alpha", 0f, 1f));
-                }
-                a.addListener(new AnimatorListenerAdapter() {
-                    public void onAnimationEnd(Animator a) {
-                        if (mComboHudView != null) {
-                            mComboHudView.setVisibility(View.VISIBLE);
-                            mComboHudView.setLayerType(View.LAYER_TYPE_NONE, null);
-                        } else {
-                            mColorsView.setVisibility(View.VISIBLE);
-                            mToolsView.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-                a.start();
-            } else {
-                if (hasAnimations()) {
-                    mLogoView.setAlpha(1f);
-                }
-            }
-        }
-        mPrefs.edit().putBoolean(PREF_LAST_HUDSTATE, show).commit();
-    }
 
     public void clickClear(View v) {
         mSlate.clear();
