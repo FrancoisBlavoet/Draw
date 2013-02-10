@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.LinkedList;
 
-
+import android.graphics.drawable.*;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -38,6 +38,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
@@ -205,11 +206,15 @@ public class MarkersActivity extends Activity
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(win.getAttributes());
         lp.format = PixelFormat.RGBA_8888;
-        win.setBackgroundDrawableResource(R.drawable.transparent);
+        //win.setBackgroundDrawableResource(R.drawable.transparent);
+        ColorDrawable cd = new ColorDrawable(Color.WHITE);
+		win.setBackgroundDrawable(cd);
+        
         win.setAttributes(lp);
-        win.requestFeature(Window.FEATURE_NO_TITLE);
-
+        //win.requestFeature(Window.FEATURE_NO_TITLE);
+        
         setContentView(R.layout.main);
+        
         mSlate = (Slate) getLastNonConfigurationInstance();
         if (mSlate == null) {
         	mSlate = new Slate(this);
@@ -224,28 +229,19 @@ public class MarkersActivity extends Activity
         final ViewGroup root = ((ViewGroup)findViewById(R.id.root));
         root.addView(mSlate, 0);
         
-        mMediaScannerConnection =
-                new MediaScannerConnection(MarkersActivity.this, mMediaScannerClient); 
+        mMediaScannerConnection = new MediaScannerConnection(MarkersActivity.this, mMediaScannerClient); 
 
         
         if (icicle != null) {
             onRestoreInstanceState(icicle);
         }
-
-        mActionBarView = findViewById(R.id.actionbar);
-        mComboHudView = findViewById(R.id.hud);
+        
+        //mComboHudView = findViewById(R.id.hud);
         mToolsView = findViewById(R.id.tools);
         mColorsView = findViewById(R.id.colors);
-        mLogoView = findViewById(R.id.logo);
         
-        setupLayers(); // the HUD needs to have a software layer at all times 
+       //setupLayers(); // the HUD needs to have a software layer at all times 
                        // so we can draw through it quickly
-
-        mDebugButton = findViewById(R.id.debug);
-
-        TextView title = (TextView) mActionBarView.findViewById(R.id.logotype);
-        Typeface light = Typeface.create("sans-serif-light", Typeface.NORMAL);
-        title.setTypeface(light);
 
         final ToolButton.ToolCallback toolCB = new ToolButton.ToolCallback() {
             @Override
@@ -299,7 +295,7 @@ public class MarkersActivity extends Activity
             }
         };
         
-        descend((ViewGroup) mColorsView, new ViewFunc() {
+        /*descend((ViewGroup) mColorsView, new ViewFunc() {
             @Override
             public void apply(View v) {
                 final ToolButton.SwatchButton swatch = (ToolButton.SwatchButton) v;
@@ -307,55 +303,35 @@ public class MarkersActivity extends Activity
                     swatch.setCallback(toolCB);
                 }
             }
-        });
-        
-        final ToolButton penThinButton = (ToolButton) findViewById(R.id.pen_thin);
-        penThinButton.setCallback(toolCB);
-
+        });*/
+       
+        //final ToolButton penThinButton = (ToolButton) findViewById(R.id.pen_thin);
+        //penThinButton.setCallback(toolCB);
+/*
         final ToolButton penMediumButton = (ToolButton) findViewById(R.id.pen_medium);
         if (penMediumButton != null) {
             penMediumButton.setCallback(toolCB);
         }
-        
-        final ToolButton penThickButton = (ToolButton) findViewById(R.id.pen_thick);
-        penThickButton.setCallback(toolCB);
-
-        final ToolButton fatMarkerButton = (ToolButton) findViewById(R.id.fat_marker);
-        if (fatMarkerButton != null) {
-            fatMarkerButton.setCallback(toolCB);
-        }
 
         final ToolButton typeWhiteboardButton = (ToolButton) findViewById(R.id.whiteboard_marker);
         typeWhiteboardButton.setCallback(toolCB);
-
-        final ToolButton typeFeltTipButton = (ToolButton) findViewById(R.id.felttip_marker);
-        if (typeFeltTipButton != null) {
-            typeFeltTipButton.setCallback(toolCB);
-        }
-        
-        final ToolButton typeAirbrushButton = (ToolButton) findViewById(R.id.airbrush_marker);
-        if (typeAirbrushButton != null) {
-            typeAirbrushButton.setCallback(toolCB);
-        }
-        
-        final ToolButton typeFountainPenButton = (ToolButton) findViewById(R.id.fountainpen_marker);
-        if (typeFountainPenButton != null) {
-            typeFountainPenButton.setCallback(toolCB);
-        }
-        
         mLastPenType = mActivePenType = typeWhiteboardButton;
-
+		*/
         loadSettings();
-
-        mActiveTool.click();
-        mActivePenType.click();
+        
+        //mActiveTool.click();
+        //mActivePenType.click();
+        
+        setPenType(3);
+        setPenColor(Color.BLACK);
+        mSlate.setPenSize(2,40);
 
         // clickDebug(null); // auto-debug mode for testing devices
     }
 
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
-
+/*
         final String toolTag = mPrefs.getString(PREF_LAST_TOOL, null);
         if (toolTag != null) {
             mActiveTool = (ToolButton) mToolsView.findViewWithTag(toolTag);
@@ -368,13 +344,13 @@ public class MarkersActivity extends Activity
         }
         mLastTool = mActiveTool;
         if (mActiveTool != null) mActiveTool.click();
-
+*/
         final String typeTag = mPrefs.getString(PREF_LAST_TOOL_TYPE, "type_whiteboard");
-        mLastPenType = mActivePenType = (ToolButton) mToolsView.findViewWithTag(typeTag);
-        if (mActivePenType != null) mActivePenType.click();
+       // mLastPenType = mActivePenType = (ToolButton) mToolsView.findViewWithTag(typeTag);
+      //  if (mActivePenType != null) mActivePenType.click();
 
         final int color = mPrefs.getInt(PREF_LAST_COLOR, 0xFF000000);
-        descend((ViewGroup) mColorsView, new ViewFunc() {
+        /*descend((ViewGroup) mColorsView, new ViewFunc() {
             @Override
             public void apply(View v) {
                 final ToolButton.SwatchButton swatch = (ToolButton.SwatchButton) v;
@@ -384,7 +360,7 @@ public class MarkersActivity extends Activity
                     }
                 }
             }
-        });
+        });*/
         mLastColor = mActiveColor;
         if (mActiveColor != null) mActiveColor.click();
     }
