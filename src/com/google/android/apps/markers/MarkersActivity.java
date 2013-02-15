@@ -23,13 +23,8 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 
 import android.graphics.drawable.*;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -38,9 +33,12 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
@@ -53,7 +51,6 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,14 +59,18 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import org.dsandler.apps.markers.R;
 
-import com.google.android.apps.markers.ToolButton.SwatchButton;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.slidingmenu.lib.SlidingMenu;
+import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends Activity
+public class MarkersActivity extends SherlockActivity
 {
     final static int LOAD_IMAGE = 1000;
 
@@ -89,16 +90,20 @@ public class MarkersActivity extends Activity
 
     private Slate mSlate;
 
-    private ToolButton mLastTool, mActiveTool;
-    private ToolButton mLastColor, mActiveColor;
-    private ToolButton mLastPenType, mActivePenType;
-
     private View mDebugButton;
     private View mColorsView;
     private View mActionBarView;
     private View mToolsView;
-    private View mLogoView;
     private View mComboHudView;
+    
+    private SlidingMenu menu;
+    private final Paint paint = new Paint();
+	private final ColorMatrix matrix = new ColorMatrix();	
+	private static boolean sHackReady;
+	private static boolean sHackAvailable;
+	private static Field sRecreateDisplayList;
+	private static Method sGetDisplayList;
+
     
     private Dialog mMenuDialog;
 
@@ -226,8 +231,8 @@ public class MarkersActivity extends Activity
                 mJustLoadedImage = false;
             }
         }
-        final ViewGroup root = ((ViewGroup)findViewById(R.id.root));
-        root.addView(mSlate, 0);
+        final ViewGroup slateContainer = ((ViewGroup)findViewById(R.id.slate));
+        slateContainer.addView(mSlate, 0);
         
         mMediaScannerConnection = new MediaScannerConnection(MarkersActivity.this, mMediaScannerClient); 
 
@@ -236,133 +241,113 @@ public class MarkersActivity extends Activity
             onRestoreInstanceState(icicle);
         }
         
-        //mComboHudView = findViewById(R.id.hud);
-        mToolsView = findViewById(R.id.tools);
-        mColorsView = findViewById(R.id.colors);
         
        //setupLayers(); // the HUD needs to have a software layer at all times 
                        // so we can draw through it quickly
 
-        final ToolButton.ToolCallback toolCB = new ToolButton.ToolCallback() {
-            @Override
-            public void setPenMode(ToolButton tool, float min, float max) {
-                mSlate.setPenSize(min, max);
-                mLastTool = mActiveTool;
-                mActiveTool = tool;
-                
-                if (mLastTool != mActiveTool) {
-                    mLastTool.deactivate();
-                    mPrefs.edit().putString(PREF_LAST_TOOL, (String) mActiveTool.getTag())
-                        .commit();
-                }
-            }
-            @Override
-            public void setPenColor(ToolButton tool, int color) {
-                MarkersActivity.this.setPenColor(color);
-                mLastColor = mActiveColor;
-                mActiveColor = tool;
-                if (mLastColor != mActiveColor) {
-                    mLastColor.deactivate();
-                    mPrefs.edit().putInt(PREF_LAST_COLOR, color).commit();
-                }
-            }
-            @Override
-            public void setPenType(ToolButton tool, int penType) {
-                MarkersActivity.this.setPenType(penType);
-                mLastPenType = mActivePenType;
-                mActivePenType = tool;
-                if (mLastPenType != mActivePenType) {
-                    mLastPenType.deactivate();
-                    mPrefs.edit().putString(PREF_LAST_TOOL_TYPE, (String) mActivePenType.getTag())
-                        .commit();
-                }
-            }
-            @Override
-            public void restore(ToolButton tool) {
-                if (tool == mActiveTool && tool != mLastTool) {
-                    mLastTool.click();
-                    mPrefs.edit().putString(PREF_LAST_TOOL, (String) mActiveTool.getTag())
-                        .commit();
-                } else if (tool == mActiveColor && tool != mLastColor) {
-                    mLastColor.click();
-                    mPrefs.edit().putInt(PREF_LAST_COLOR, ((SwatchButton) mLastColor).color)
-                        .commit();
-                }
-            }
-            @Override
-            public void setBackgroundColor(ToolButton tool, int color) {
-                mSlate.setDrawingBackground(color);
-            }
-        };
         
-        /*descend((ViewGroup) mColorsView, new ViewFunc() {
-            @Override
-            public void apply(View v) {
-                final ToolButton.SwatchButton swatch = (ToolButton.SwatchButton) v;
-                if (swatch != null) {
-                    swatch.setCallback(toolCB);
-                }
-            }
-        });*/
-       
-        //final ToolButton penThinButton = (ToolButton) findViewById(R.id.pen_thin);
-        //penThinButton.setCallback(toolCB);
-/*
-        final ToolButton penMediumButton = (ToolButton) findViewById(R.id.pen_medium);
-        if (penMediumButton != null) {
-            penMediumButton.setCallback(toolCB);
-        }
+        
+		
+		menu = new SlidingMenu(this);
+		menu.setMode(SlidingMenu.LEFT);
+		menu.setShadowDrawable(R.drawable.shadow);
+		menu.setShadowWidthRes(R.dimen.shadow_width);
+		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+		menu.setFadeEnabled(false);
+		menu.setMenu(R.layout.sliding_menu);
+		
 
-        final ToolButton typeWhiteboardButton = (ToolButton) findViewById(R.id.whiteboard_marker);
-        typeWhiteboardButton.setCallback(toolCB);
-        mLastPenType = mActivePenType = typeWhiteboardButton;
-		*/
+		menu.setBehindCanvasTransformer(new CanvasTransformer() {
+			@Override
+			public void transformCanvas(Canvas canvas, float percentOpen) {
+				boolean API_17 = Build.VERSION.SDK_INT >= 17;
+				boolean API_16 = Build.VERSION.SDK_INT == 16;
+
+				if (API_16) {
+					prepareLayerHack();
+				}
+				//add invalidate spot
+				manageLayers(percentOpen);
+				updateColorFilter(percentOpen);
+				updatePaint(API_17, API_16);
+			}
+		});
+        
         loadSettings();
         
-        //mActiveTool.click();
-        //mActivePenType.click();
-        
-        setPenType(3);
+        setPenType(3);  //place holder params until they are replaced by the new UI
         setPenColor(Color.BLACK);
-        mSlate.setPenSize(2,40);
-
-        // clickDebug(null); // auto-debug mode for testing devices
+        mSlate.setPenSize(2,40);        
     }
+    
+    @TargetApi(17)
+	private void updatePaint(boolean API_17, boolean API_16) {
+		View backView = menu.getMenu();
+		if (API_17) {
+			backView.setLayerPaint(paint);
+		} else {
+			if (API_16) {
+				if (sHackAvailable) {
+					try {
+						sRecreateDisplayList.setBoolean(backView, true);
+						sGetDisplayList.invoke(backView, (Object[]) null);
+					} catch (IllegalArgumentException e) {
+					} catch (IllegalAccessException e) {
+					} catch (InvocationTargetException e) {
+					}
+				} else {
+					// This solution is slow
+					menu.getMenu().invalidate();
+				}
+			}
+
+			// API level < 16 doesn't need the hack above, but the invalidate is required
+			((View) backView.getParent()).postInvalidate(backView.getLeft(), backView.getTop(),
+					backView.getRight(), backView.getBottom());
+		}
+	}
+    
+	private void updateColorFilter(float percentOpen) {
+		matrix.setSaturation(percentOpen);
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+		paint.setColorFilter(filter);
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void manageLayers(float percentOpen) {
+		boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
+		int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+
+		if (Build.VERSION.SDK_INT >= 11 && layerType != menu.getContent().getLayerType()) {
+			menu.getContent().setLayerType(layerType, null);
+			menu.getMenu().setLayerType(layerType, Build.VERSION.SDK_INT <= 16 ? paint : null);
+		}
+	}
+
+	
+	private static void prepareLayerHack() {
+		if (!sHackReady) {
+			try {
+				sRecreateDisplayList = View.class.getDeclaredField("mRecreateDisplayList");
+				sRecreateDisplayList.setAccessible(true);
+
+				sGetDisplayList = View.class.getDeclaredMethod("getDisplayList", (Class<?>) null);
+				sGetDisplayList.setAccessible(true);
+
+				sHackAvailable = true;
+			} catch (NoSuchFieldException e) {
+			} catch (NoSuchMethodException e) {
+			}
+			sHackReady = true;
+		}
+	}   
+    
+    
 
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
-/*
-        final String toolTag = mPrefs.getString(PREF_LAST_TOOL, null);
-        if (toolTag != null) {
-            mActiveTool = (ToolButton) mToolsView.findViewWithTag(toolTag);
-        }
-        if (mActiveTool == null) {
-            mActiveTool = (ToolButton) mToolsView.findViewById(R.id.pen_thick);
-        }
-        if (mActiveTool == null) {
-            mActiveTool = (ToolButton) mToolsView.findViewById(R.id.pen_thin);
-        }
-        mLastTool = mActiveTool;
-        if (mActiveTool != null) mActiveTool.click();
-*/
-        final String typeTag = mPrefs.getString(PREF_LAST_TOOL_TYPE, "type_whiteboard");
-       // mLastPenType = mActivePenType = (ToolButton) mToolsView.findViewWithTag(typeTag);
-      //  if (mActivePenType != null) mActivePenType.click();
-
-        final int color = mPrefs.getInt(PREF_LAST_COLOR, 0xFF000000);
-        /*descend((ViewGroup) mColorsView, new ViewFunc() {
-            @Override
-            public void apply(View v) {
-                final ToolButton.SwatchButton swatch = (ToolButton.SwatchButton) v;
-                if (swatch != null) {
-                    if (color == swatch.color) {
-                        mActiveColor = swatch;
-                    }
-                }
-            }
-        });*/
-        mLastColor = mActiveColor;
-        if (mActiveColor != null) mActiveColor.click();
     }
 
     @Override
