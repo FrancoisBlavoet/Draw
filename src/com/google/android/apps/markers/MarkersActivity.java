@@ -47,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -67,10 +68,12 @@ import java.lang.reflect.Method;
 import org.dsandler.apps.markers.R;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.google.android.apps.markers.ColorDialog.ColorDialogListener;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends SherlockActivity
+public class MarkersActivity extends SherlockFragmentActivity implements ColorDialogListener
 {
     final static int LOAD_IMAGE = 1000;
 
@@ -168,12 +171,13 @@ public class MarkersActivity extends SherlockActivity
             return true;
         }
     }
-
+/*
     @Override
     public Object onRetainNonConfigurationInstance() {
     	((ViewGroup)mSlate.getParent()).removeView(mSlate);
         return mSlate;
-    }
+    }should be ok as long as the orientation is fixed. If not the slate needs to be in a
+     fragment and use setRetainInstance on it*/
     
     public static interface ViewFunc {
         public void apply(View v);
@@ -220,7 +224,7 @@ public class MarkersActivity extends SherlockActivity
         
         setContentView(R.layout.main);
         
-        mSlate = (Slate) getLastNonConfigurationInstance();
+        //mSlate = (Slate) getLastNonConfigurationInstance();
         if (mSlate == null) {
         	mSlate = new Slate(this);
 
@@ -279,8 +283,12 @@ public class MarkersActivity extends SherlockActivity
         
         setPenType(3);  //place holder params until they are replaced by the new UI
         setPenColor(Color.BLACK);
-        mSlate.setPenSize(2,40);        
+        mSlate.setPenSize(2,40);
+        
+        showEditDialog();
     }
+//-----------------------
+// Sliding menu methods :
     
     @TargetApi(17)
 	private void updatePaint(boolean API_17, boolean API_16) {
@@ -343,6 +351,22 @@ public class MarkersActivity extends SherlockActivity
 			sHackReady = true;
 		}
 	}   
+    
+	//-----------------------
+	
+	private void showEditDialog() {
+		
+       FragmentManager fm = getSupportFragmentManager();
+       ColorDialog colorDialog = new ColorDialog();    
+       colorDialog.show(fm, "dialog_color");
+
+    }    
+	
+    @Override
+    public void onFinishColorDialog(String inputText) {
+        Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
+    }
+    
     
     
 

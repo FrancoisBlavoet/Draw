@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="DrawAppTheme" parent="@style/Theme.Sherlock.Light" />
+
+    <style name="DrawAppTheme" parent="@style/Theme.Sherlock.Light"></style>
+
+    <style name="colorPickerStyle" parent="android:Theme">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
 </resources>
