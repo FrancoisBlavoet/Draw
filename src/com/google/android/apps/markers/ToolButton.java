@@ -51,10 +51,10 @@ public class ToolButton extends View {
     // Enable a delay here to use "shifted" mode, where longpressing a tool will only assert that
     // tool until you lift your finger
     //    private static final long PERMANENT_TOOL_SWITCH_THRESHOLD = 300; // ms
-    private static final long PERMANENT_TOOL_SWITCH_THRESHOLD = 0; // ms
+    //private static final long PERMANENT_TOOL_SWITCH_THRESHOLD = 0; // ms
     
     private ToolCallback mCallback;
-    private long mDownTime;
+    //private long mDownTime;
     
     protected Paint mPaint;
     protected ColorStateList mFgColor, mBgColor;
@@ -209,7 +209,7 @@ public class ToolButton extends View {
 
             int color = mFgColor.getColorForState(getDrawableState(), mFgColor.getDefaultColor());
             mPaint.setColor(color);
-            mPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)); // SRC_IN ??
+            //mPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)); // SRC_IN ??
             tmpRF.set(x-r,y-r,x+r,y+r);
 
             switch (penType) {
@@ -275,7 +275,7 @@ public class ToolButton extends View {
 
             int p = this.getPaddingLeft();
             if ((color & 0xFF000000) == 0) { // transparent
-                mTransparentTile.setBounds(canvas.getClipBounds());
+                //mTransparentTile.setBounds(canvas.getClipBounds());
                 mTransparentTile.draw(canvas);
             } else {
                 canvas.drawColor(color);
@@ -299,22 +299,7 @@ public class ToolButton extends View {
         }
     }
 
-    public static class ZoomToolButton extends ToolButton {
-        public ZoomToolButton(Context context, AttributeSet attrs, int defStyle) {
-            super(context, attrs, defStyle);
-        }
-        
-        public ZoomToolButton(Context context, AttributeSet attrs) {
-            this(context, attrs, 0);
-        }
-        
-        @Override
-        void activate() {
-            super.activate();
-            final ToolCallback cb = getCallback();
-            if (cb != null) cb.setZoomMode(this);
-        }
-    }
+
 
     public ToolButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -354,24 +339,11 @@ public class ToolButton extends View {
     public boolean onTouchEvent(MotionEvent event) {
         final int action = event.getAction();
         
-		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_ERASER)
-		{
-			Log.i("TEST", "eraser");
-		}
-		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS)
-		{
-			Log.i("TEST", "stylus");
-		}
-		if (event.getToolType(0) == MotionEvent.TOOL_TYPE_FINGER)
-		{
-			Log.i("TEST", "finger");
-		}
-        
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 if (Slate.DEBUG) Log.d(Slate.TAG, "DOWN on " + ToolButton.this + " lph=" + mLongPressHandler);
                 postDelayed(mLongPressHandler, ViewConfiguration.getLongPressTimeout());
-                mDownTime = event.getEventTime();
+                //mDownTime = event.getEventTime();
                 setPressed(true);
                 invalidate();
                 return true;

@@ -47,13 +47,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,7 +64,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import org.dsandler.apps.markers.R;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.google.android.apps.markers.ColorDialogFragment.ColorDialogListener;
 import com.slidingmenu.lib.SlidingMenu;
@@ -662,46 +657,11 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
         startActivity(urlIntent);
     }
 
-    private void showOverflow() {
-        mMenuDialog.show();
-    }
+
     private void hideOverflow() {
         mMenuDialog.dismiss();
     }
-    public void clickOverflow(View v) {
-        if (mMenuDialog == null) {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.overflow_menu, null);
-    
-    //        TextView text = (TextView) layout.findViewById(R.id.text);
-    //        text.setText("Hello, this is a custom dialog!");
-    //        ImageView image = (ImageView) layout.findViewById(R.id.image);
-    //        image.setImageResource(R.drawable.android);
-    
-            mMenuDialog = new Dialog(this);
-            //mMenuDialog = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_DARK).create();
-            Window dialogWin  = mMenuDialog.getWindow();
-            dialogWin.requestFeature(Window.FEATURE_NO_TITLE);
-            dialogWin.setGravity(Gravity.TOP|Gravity.RIGHT);
-            WindowManager.LayoutParams winParams = dialogWin.getAttributes();
-            winParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            winParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            winParams.y = getResources().getDimensionPixelOffset(R.dimen.action_bar_height);
-            dialogWin.setAttributes(winParams);
-            dialogWin.setWindowAnimations(android.R.style.Animation_Translucent);
-            dialogWin.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            mMenuDialog.setCanceledOnTouchOutside(true); 
 
-            mMenuDialog.setContentView(layout);
-            // bash the background
-            final View decor = layout.getRootView();
-
-            decor.setBackgroundDrawable(null);
-            decor.setPadding(0,0,0,0);
-        }
-
-        showOverflow();
-    }
 
     public void setPenColor(int color) {
         mSlate.setPenColor(color);

@@ -255,8 +255,6 @@ public class Slate extends View {
             return mPenType;
         }
 
-        public void setDebugMode(boolean debug) {
-        }
 
         public void reset() {
             mLastX = mLastY = mTan[0] = mTan[1] = 0;
@@ -514,6 +512,7 @@ public class Slate extends View {
     private Paint mGraphPaint1;
     private int mBackgroundColor = Color.TRANSPARENT;
 
+    @SuppressLint("DefaultLocale")
     private void drawStrokeDebugInfo(Canvas c) {
         final int ROW_HEIGHT = 24;
         final int ROW_MARGIN = 6;
