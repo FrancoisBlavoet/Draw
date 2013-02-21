@@ -47,6 +47,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -69,7 +70,7 @@ import org.dsandler.apps.markers.R;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.apps.markers.ColorDialog.ColorDialogListener;
+import com.google.android.apps.markers.ColorDialogFragment.ColorDialogListener;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
@@ -355,11 +356,8 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
 	//-----------------------
 	
 	private void showEditDialog() {
-		
-       FragmentManager fm = getSupportFragmentManager();
-       ColorDialog colorDialog = new ColorDialog();    
-       colorDialog.show(fm, "dialog_color");
-
+       ColorDialogFragment newFragment = new ColorDialogFragment();
+       newFragment.show(getSupportFragmentManager(), "colorPicker");
     }    
 	
     @Override
