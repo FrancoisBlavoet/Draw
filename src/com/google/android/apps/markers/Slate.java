@@ -63,7 +63,7 @@ public class Slate extends View {
     private static final float SMOOTHING_FILTER_POS_DECAY = 0.65f;
     private static final float SMOOTHING_FILTER_PRESSURE_DECAY = 0.9f;
 
-    private static final int FIXED_DIMENSION = 0; // 1024;
+    //private static final int FIXED_DIMENSION = 0; // 1024;
 
     private static final float INVALIDATE_PADDING = 4.0f;
     public static final boolean ASSUME_STYLUS_CALIBRATED = true;
@@ -224,10 +224,7 @@ public class Slate extends View {
             }
         }
 
-        public int getPenColor() {
-            return mPenColor;
-        }
-        
+
         public void setPenType(int type) {
             mPenType = type;
             switch (type) {
@@ -251,9 +248,6 @@ public class Slate extends View {
             setPenColor(mPenColor);
         }
         
-        public int getPenType() {
-            return mPenType;
-        }
 
 
         public void reset() {
@@ -375,7 +369,8 @@ public class Slate extends View {
             return dirty;
         }
         
-        public float getRadius() {
+        @SuppressWarnings("unused")
+	public float getRadius() {
             return mLastR;
         }
     }

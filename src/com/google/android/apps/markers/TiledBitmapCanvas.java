@@ -143,12 +143,13 @@ public class TiledBitmapCanvas implements CanvasLite {
         public Bitmap getBitmap() {
             return versions.get(0).bitmap;
         }
+        /*
         public Bitmap getBitmap(int version) {
             return getVersion(version).bitmap;
         }
         public Canvas getCanvas() {
             return versions.get(0).canvas;
-        }
+        }*/
         public Canvas getCanvas(int version) {
             return getVersion(version).canvas;
         }
