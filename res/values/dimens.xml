@@ -26,6 +26,8 @@
     <dimen name="action_button_padding_v">4dp</dimen>
     <dimen name="tool_palette_gutter">6dp</dimen>
     <dimen name="shadow_width">15dp</dimen>
-     <dimen name="slidingmenu_offset">120dp</dimen>
+    <dimen name="slidingmenu_offset">120dp</dimen>
+    <dimen name="toolbar_width">100dip</dimen>
+     
 
 </resources>

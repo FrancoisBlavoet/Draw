@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:background="@android:color/transparent" >
 
-    <com.larswerkman.colorpicker.ColorPicker
+    <com.google.android.apps.markers.MarkersColorPicker
         android:id="@+id/picker"
         android:layout_width="286dp"
         android:layout_height="286dp"

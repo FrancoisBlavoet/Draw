@@ -20,13 +20,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 
-import android.graphics.drawable.*;
+import org.dsandler.apps.markers.R;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -39,6 +42,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
@@ -47,29 +51,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import org.dsandler.apps.markers.R;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.google.android.apps.markers.ColorDialogFragment.ColorDialogListener;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends SherlockFragmentActivity implements ColorDialogListener
+public class MarkersActivity extends SherlockFragmentActivity 
 {
     final static int LOAD_IMAGE = 1000;
 
@@ -88,12 +83,11 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
     private boolean mJustLoadedImage = false;
 
     private Slate mSlate;
+    public ColorButtonView mColorButton;
+    private ColorDialogFragment mColorDialog;
+    public int mColor;
 
     private View mDebugButton;
-    private View mColorsView;
-    private View mActionBarView;
-    private View mToolsView;
-    private View mComboHudView;
     
     private SlidingMenu menu;
     private final Paint paint = new Paint();
@@ -148,25 +142,7 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
             };
 
 
-    public static class ColorList extends LinearLayout {
-        public ColorList(Context c, AttributeSet as) {
-            super(c, as);
-        }
-        
-        @Override
-        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-            super.onLayout(changed, left, top, right, bottom);
-            int newOrientation = (((right-left) > (bottom-top)) ? HORIZONTAL : VERTICAL);
-            if (newOrientation != getOrientation()) {
-                setOrientation(newOrientation);
-            }
-        }
 
-        @Override
-        public boolean onInterceptTouchEvent(MotionEvent e) {
-            return true;
-        }
-    }
 /*
     @Override
     public Object onRetainNonConfigurationInstance() {
@@ -189,99 +165,82 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
         }
     }
 
-    @TargetApi(11)
-    private void setupLayers() {
-        if (!hasAnimations()) return;
-
-        if (mComboHudView != null) {
-            mComboHudView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        } else {
-            mToolsView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            mColorsView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        mActionBarView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-    }
 
     @Override
-    public void onCreate(Bundle icicle)
-    {
-        super.onCreate(icicle);
+    public void onCreate(Bundle icicle) {
+	super.onCreate(icicle);
 
-        final Window win = getWindow();
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(win.getAttributes());
-        lp.format = PixelFormat.RGBA_8888;
-        //win.setBackgroundDrawableResource(R.drawable.transparent);
-        ColorDrawable cd = new ColorDrawable(Color.WHITE);
-		win.setBackgroundDrawable(cd);
-        
-        win.setAttributes(lp);
-        //win.requestFeature(Window.FEATURE_NO_TITLE);
-        
-        setContentView(R.layout.main);
-        
-        //mSlate = (Slate) getLastNonConfigurationInstance();
-        if (mSlate == null) {
-        	mSlate = new Slate(this);
+	final Window win = getWindow();
+	WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	lp.copyFrom(win.getAttributes());
+	lp.format = PixelFormat.RGBA_8888;
+	// win.setBackgroundDrawableResource(R.drawable.transparent);
+	ColorDrawable cd = new ColorDrawable(Color.WHITE);
+	win.setBackgroundDrawable(cd);
 
-        	// Load the old buffer if necessary
-            if (!mJustLoadedImage) {
-                loadDrawing(WIP_FILENAME, true);
-            } else {
-                mJustLoadedImage = false;
-            }
-        }
-        final ViewGroup slateContainer = ((ViewGroup)findViewById(R.id.slate));
-        slateContainer.addView(mSlate, 0);
-        
-        mMediaScannerConnection = new MediaScannerConnection(MarkersActivity.this, mMediaScannerClient); 
+	win.setAttributes(lp);
+	// win.requestFeature(Window.FEATURE_NO_TITLE);
 
-        
-        if (icicle != null) {
-            onRestoreInstanceState(icicle);
-        }
-        
-        
-       //setupLayers(); // the HUD needs to have a software layer at all times 
-                       // so we can draw through it quickly
+	setContentView(R.layout.main);
 
-        
-        
-		
-		menu = new SlidingMenu(this);
-		menu.setMode(SlidingMenu.LEFT);
-		menu.setShadowDrawable(R.drawable.shadow);
-		menu.setShadowWidthRes(R.dimen.shadow_width);
-		menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
-		menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-		menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
-		menu.setFadeEnabled(false);
-		menu.setMenu(R.layout.sliding_menu);
-		
+	mColorButton = (ColorButtonView) this.findViewById(R.id.colorbutton);
+	// mSlate = (Slate) getLastNonConfigurationInstance();
+	if (mSlate == null) {
+	    mSlate = new Slate(this);
 
-		menu.setBehindCanvasTransformer(new CanvasTransformer() {
-			@Override
-			public void transformCanvas(Canvas canvas, float percentOpen) {
-				boolean API_17 = Build.VERSION.SDK_INT >= 17;
-				boolean API_16 = Build.VERSION.SDK_INT == 16;
+	    // Load the old buffer if necessary
+	    if (!mJustLoadedImage) {
+		loadDrawing(WIP_FILENAME, true);
+	    } else {
+		mJustLoadedImage = false;
+	    }
+	}
+	final ViewGroup slateContainer = ((ViewGroup) findViewById(R.id.slate));
+	slateContainer.addView(mSlate, 0);
 
-				if (API_16) {
-					prepareLayerHack();
-				}
-				//add invalidate spot
-				manageLayers(percentOpen);
-				updateColorFilter(percentOpen);
-				updatePaint(API_17, API_16);
-			}
-		});
-        
-        loadSettings();
-        
-        setPenType(3);  //place holder params until they are replaced by the new UI
-        setPenColor(Color.BLACK);
-        mSlate.setPenSize(2,40);
-        
-        showEditDialog();
+	mMediaScannerConnection = new MediaScannerConnection(
+		MarkersActivity.this, mMediaScannerClient);
+
+	if (icicle != null) {
+	    onRestoreInstanceState(icicle);
+	}
+
+	menu = new SlidingMenu(this);
+	menu.setMode(SlidingMenu.LEFT);
+	menu.setShadowDrawable(R.drawable.shadow);
+	menu.setShadowWidthRes(R.dimen.shadow_width);
+	menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);
+	menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+	menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+	menu.setFadeEnabled(false);
+	menu.setMenu(R.layout.sliding_menu);
+	menu.setTouchModeMarginThreshold(getResources().getDimensionPixelOffset(R.dimen.toolbar_width));
+	
+
+	menu.setBehindCanvasTransformer(new CanvasTransformer() {
+	    @Override
+	    public void transformCanvas(Canvas canvas, float percentOpen) {
+		boolean API_17 = Build.VERSION.SDK_INT >= 17;
+		boolean API_16 = Build.VERSION.SDK_INT == 16;
+
+		if (API_16) {
+		    prepareLayerHack();
+		}
+		// add invalidate spot
+		manageLayers(percentOpen);
+		updateColorFilter(percentOpen);
+		updatePaint(API_17, API_16);
+	    }
+	});
+
+	loadSettings();
+
+	setPenType(0); // place holder params until they are replaced by the new
+		       // UI
+	mColor = Color.BLACK;
+	setPenColor(mColor);
+	mSlate.setPenSize(1, 40);
+
     }
 //-----------------------
 // Sliding menu methods :
@@ -349,20 +308,15 @@ public class MarkersActivity extends SherlockFragmentActivity implements ColorDi
 	}   
     
 	//-----------------------
-	
-	private void showEditDialog() {
-       ColorDialogFragment newFragment = new ColorDialogFragment();
-       newFragment.show(getSupportFragmentManager(), "colorPicker");
-    }    
-	
-    @Override
-    public void onFinishColorDialog(String inputText) {
-        Toast.makeText(this, "Hi, " + inputText, Toast.LENGTH_SHORT).show();
-    }
-    
-    
-    
 
+    public void showColorPicker(View view) {
+	if (mColorDialog == null) {
+	    mColorDialog = new ColorDialogFragment();
+	}
+	mColorDialog.show(getSupportFragmentManager(), "colorPicker");
+    }
+
+    
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
     }
