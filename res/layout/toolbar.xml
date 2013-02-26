@@ -9,6 +9,7 @@
         android:id="@+id/colorbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="showColorPicker" />
+        android:onClick="showColorPicker"
+        android:padding="10dp" />
 
 </LinearLayout>

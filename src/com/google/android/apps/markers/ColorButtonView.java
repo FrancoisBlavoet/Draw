@@ -27,9 +27,9 @@ public class ColorButtonView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 	int height = getDefaultSize(getSuggestedMinimumHeight(),
 		heightMeasureSpec);
-	height = Math.min(height, mColorWheelRadius);
+	height = Math.min(height, mColorWheelRadius + getPaddingTop() + getPaddingBottom());
 	int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-	width = Math.min(width, mColorWheelRadius);
+	width = Math.min(width, mColorWheelRadius + getPaddingLeft() + getPaddingRight());
 	setMeasuredDimension(width, height);
     }
 
@@ -37,8 +37,11 @@ public class ColorButtonView extends View {
     protected void onDraw(Canvas canvas) {
 	// canvas.translate(mColorWheelRadius/2, mColorWheelRadius/2);
 	mPointerColor.setColor(mColor);
-	mColorWheelRectangle.set(getLeft(), getTop(), getLeft()
-		+ mColorWheelRadius, getTop() + mColorWheelRadius);
+	mColorWheelRectangle.set(getLeft() + this.getPaddingLeft(),
+				 getTop()  + this.getPaddingTop(),
+				 getLeft() + mColorWheelRadius + this.getPaddingRight(),
+				 getTop()  + mColorWheelRadius + this.getPaddingBottom());
+	
 	canvas.drawOval(mColorWheelRectangle, mPointerColor);
 
     }

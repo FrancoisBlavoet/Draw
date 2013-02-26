@@ -28,8 +28,7 @@
     <FrameLayout
         android:id="@+id/slate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/transparent" >
+        android:layout_height="match_parent" >
     </FrameLayout>
 
 </LinearLayout>

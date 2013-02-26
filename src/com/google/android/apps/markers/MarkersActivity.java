@@ -61,6 +61,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
@@ -244,67 +246,72 @@ public class MarkersActivity extends SherlockFragmentActivity
 // Sliding menu methods :
     
     @TargetApi(17)
-	private void updatePaint(boolean API_17, boolean API_16) {
-		View backView = menu.getMenu();
-		if (API_17) {
-			backView.setLayerPaint(paint);
+    private void updatePaint(boolean API_17, boolean API_16) {
+	View backView = menu.getMenu();
+	if (API_17) {
+	    backView.setLayerPaint(paint);
+	} else {
+	    if (API_16) {
+		if (sHackAvailable) {
+		    try {
+			sRecreateDisplayList.setBoolean(backView, true);
+			sGetDisplayList.invoke(backView, (Object[]) null);
+		    } catch (IllegalArgumentException e) {
+		    } catch (IllegalAccessException e) {
+		    } catch (InvocationTargetException e) {
+		    }
 		} else {
-			if (API_16) {
-				if (sHackAvailable) {
-					try {
-						sRecreateDisplayList.setBoolean(backView, true);
-						sGetDisplayList.invoke(backView, (Object[]) null);
-					} catch (IllegalArgumentException e) {
-					} catch (IllegalAccessException e) {
-					} catch (InvocationTargetException e) {
-					}
-				} else {
-					// This solution is slow
-					menu.getMenu().invalidate();
-				}
-			}
-
-			// API level < 16 doesn't need the hack above, but the invalidate is required
-			((View) backView.getParent()).postInvalidate(backView.getLeft(), backView.getTop(),
-					backView.getRight(), backView.getBottom());
+		    // This solution is slow
+		    menu.getMenu().invalidate();
 		}
-	}
-    
-	private void updateColorFilter(float percentOpen) {
-		matrix.setSaturation(percentOpen);
-		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-		paint.setColorFilter(filter);
-	}
+	    }
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	    // API level < 16 doesn't need the hack above, but the invalidate is
+	    // required
+	    ((View) backView.getParent()).postInvalidate(backView.getLeft(),
+		    backView.getTop(), backView.getRight(),
+		    backView.getBottom());
+	}
+    }
+
+    private void updateColorFilter(float percentOpen) {
+	matrix.setSaturation(percentOpen);
+	ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+	paint.setColorFilter(filter);
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void manageLayers(float percentOpen) {
-		boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
-		int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
+	boolean layer = percentOpen > 0.0f && percentOpen < 1.0f;
+	int layerType = layer ? View.LAYER_TYPE_HARDWARE : View.LAYER_TYPE_NONE;
 
-		if (Build.VERSION.SDK_INT >= 11 && layerType != menu.getContent().getLayerType()) {
-			menu.getContent().setLayerType(layerType, null);
-			menu.getMenu().setLayerType(layerType, Build.VERSION.SDK_INT <= 16 ? paint : null);
-		}
+	if (Build.VERSION.SDK_INT >= 11
+		&& layerType != menu.getContent().getLayerType()) {
+	    menu.getContent().setLayerType(layerType, null);
+	    menu.getMenu().setLayerType(layerType,
+		    Build.VERSION.SDK_INT <= 16 ? paint : null);
 	}
+    }
 
-	
-	private static void prepareLayerHack() {
-		if (!sHackReady) {
-			try {
-				sRecreateDisplayList = View.class.getDeclaredField("mRecreateDisplayList");
-				sRecreateDisplayList.setAccessible(true);
+    private static void prepareLayerHack() {
+	if (!sHackReady) {
+	    try {
+		sRecreateDisplayList = View.class
+			.getDeclaredField("mRecreateDisplayList");
+		sRecreateDisplayList.setAccessible(true);
 
-				sGetDisplayList = View.class.getDeclaredMethod("getDisplayList", (Class<?>) null);
-				sGetDisplayList.setAccessible(true);
+		sGetDisplayList = View.class.getDeclaredMethod(
+			"getDisplayList", (Class<?>) null);
+		sGetDisplayList.setAccessible(true);
 
-				sHackAvailable = true;
-			} catch (NoSuchFieldException e) {
-			} catch (NoSuchMethodException e) {
-			}
-			sHackReady = true;
-		}
-	}   
-   
+		sHackAvailable = true;
+	    } catch (NoSuchFieldException e) {
+	    } catch (NoSuchMethodException e) {
+	    }
+	    sHackReady = true;
+	}
+    }
+
 //-----------------------
 
     public void showColorPicker(View view) {
@@ -320,6 +327,24 @@ public class MarkersActivity extends SherlockFragmentActivity
         mPrefs = getPreferences(MODE_PRIVATE);
         this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
         mColorButton.setColor(mColor);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+       MenuInflater inflater = getSupportMenuInflater();
+       inflater.inflate(R.menu.markers_activity, (Menu) menu);
+       return super.onCreateOptionsMenu(menu);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(
+	    com.actionbarsherlock.view.MenuItem item) {
+	switch (item.getItemId()) {
+	case R.id.menu_back:
+	    clickUndo(null);
+	    break;
+	}
+	return true;
     }
 
     @Override
