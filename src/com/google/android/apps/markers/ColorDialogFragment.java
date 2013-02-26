@@ -5,7 +5,6 @@ import org.dsandler.apps.markers.R;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +17,7 @@ import com.google.android.apps.markers.MarkersColorPicker.ColorPickerCallback;
 public class ColorDialogFragment extends SherlockDialogFragment {
 
     public MarkersColorPicker mColorPicker;
-    private int mOldColor = Color.BLACK ;
+    public int mOldColor = Color.BLACK ;
 
     public ColorDialogFragment() {
 
@@ -34,6 +33,8 @@ public class ColorDialogFragment extends SherlockDialogFragment {
 	wmlp.x = 180;
 	mColorPicker = (MarkersColorPicker) view.findViewById(R.id.picker);
 	mColorPicker.setOldCenterColor(mOldColor);
+	mColorPicker.setColor(mOldColor);
+	mColorPicker.setNewCenterColor(mOldColor);
 	mColorPicker.setOnColorChangedListener(new ColorPickerCallback() {
 	    @Override
 	    public void onColorChanged(int color) {

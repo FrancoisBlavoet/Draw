@@ -24,8 +24,8 @@ import android.graphics.Paint;
 class PressureCooker {
     private static final String PREFS_NAME = "Markers";
     
-    private static final String PREF_MIN_DIAMETER = "min_diameter";
-    private static final String PREF_MAX_DIAMETER = "max_diameter";
+   // private static final String PREF_MIN_DIAMETER = "min_diameter";
+   // private static final String PREF_MAX_DIAMETER = "max_diameter";
     private static final String PREF_PRESSURE_MIN = "pressure_min";
     private static final String PREF_PRESSURE_MAX = "pressure_max";
     private static final String PREF_FIRST_RUN = "first_run";
@@ -57,7 +57,7 @@ class PressureCooker {
     }
     
     public void loadStats() {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_WORLD_READABLE);
+        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
         mPressureMin = prefs.getFloat(PREF_PRESSURE_MIN, DEF_PRESSURE_MIN);
         mPressureMax = prefs.getFloat(PREF_PRESSURE_MAX, DEF_PRESSURE_MAX);
@@ -67,7 +67,7 @@ class PressureCooker {
     }
 
     public void saveStats() {
-        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_WORLD_READABLE);
+        SharedPreferences prefs = mContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor prefsE = prefs.edit();
         prefsE.putBoolean(PREF_FIRST_RUN, false);
     

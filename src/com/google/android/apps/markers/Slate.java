@@ -26,8 +26,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PathMeasure;
+//import android.graphics.Path;
+//import android.graphics.PathMeasure;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
@@ -196,8 +196,8 @@ public class Slate extends View {
 
         private int mShape = SHAPE_CIRCLE; // SHAPE_BITMAP_AIRBRUSH;
 
-        private Path mWorkPath = new Path();
-        private PathMeasure mWorkPathMeasure = new PathMeasure();
+        //private Path mWorkPath = new Path();
+        //private PathMeasure mWorkPathMeasure = new PathMeasure();
         
         private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         
@@ -246,6 +246,11 @@ public class Slate extends View {
                 break;
             }
             setPenColor(mPenColor);
+        }
+        
+        @SuppressWarnings("unused")
+	public int getPenType() {
+            return mPenType;
         }
         
 

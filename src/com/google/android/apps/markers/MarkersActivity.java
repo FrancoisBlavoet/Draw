@@ -78,7 +78,6 @@ public class MarkersActivity extends SherlockFragmentActivity
     public static final String PREF_LAST_TOOL = "tool";
     public static final String PREF_LAST_TOOL_TYPE = "tool_type";
     public static final String PREF_LAST_COLOR = "color";
-    public static final String PREF_LAST_HUDSTATE = "hudup";
 
     private boolean mJustLoadedImage = false;
 
@@ -237,7 +236,6 @@ public class MarkersActivity extends SherlockFragmentActivity
 
 	setPenType(0); // place holder params until they are replaced by the new
 		       // UI
-	mColor = Color.BLACK;
 	setPenColor(mColor);
 	mSlate.setPenSize(1, 40);
 
@@ -306,25 +304,28 @@ public class MarkersActivity extends SherlockFragmentActivity
 			sHackReady = true;
 		}
 	}   
-    
-	//-----------------------
+   
+//-----------------------
 
     public void showColorPicker(View view) {
 	if (mColorDialog == null) {
 	    mColorDialog = new ColorDialogFragment();
 	}
+	mColorDialog.mOldColor = mColor;
 	mColorDialog.show(getSupportFragmentManager(), "colorPicker");
     }
 
     
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
+        this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
+        mColorButton.setColor(mColor);
     }
 
     @Override
     public void onPause() {
-        super.onPause();
-        saveDrawing(WIP_FILENAME, true);
+	super.onPause();
+	saveDrawing(WIP_FILENAME, true);
     }
 
     @Override
@@ -352,6 +353,7 @@ public class MarkersActivity extends SherlockFragmentActivity
 
     @Override
     protected void onStop() {
+        mPrefs.edit().putInt(PREF_LAST_COLOR, mColor).commit();
         super.onStop();
     }
 

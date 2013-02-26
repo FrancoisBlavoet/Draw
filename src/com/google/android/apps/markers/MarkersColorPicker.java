@@ -1,15 +1,8 @@
 package com.google.android.apps.markers;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
-
-import com.google.android.apps.markers.ToolButton.ToolCallback;
-import com.larswerkman.colorpicker.ColorPicker;
 
 public class MarkersColorPicker extends com.larswerkman.colorpicker.ColorPicker {
     private ColorPickerCallback mOnColorChangedListener;
