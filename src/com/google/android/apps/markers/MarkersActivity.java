@@ -188,6 +188,7 @@ public class MarkersActivity extends SherlockFragmentActivity
 	// mSlate = (Slate) getLastNonConfigurationInstance();
 	if (mSlate == null) {
 	    mSlate = new Slate(this);
+	    mSlate.setDrawingBackground(Color.WHITE); // TODO to be configurable in the project creation wizard
 
 	    // Load the old buffer if necessary
 	    if (!mJustLoadedImage) {
@@ -342,6 +343,12 @@ public class MarkersActivity extends SherlockFragmentActivity
 	switch (item.getItemId()) {
 	case R.id.menu_back:
 	    clickUndo(null);
+	    break;
+	case R.id.menu_clear:
+	    clickClear();
+	    break;
+	case R.id.menu_share:
+	    clickShare(null);
 	    break;
 	}
 	return true;
@@ -552,6 +559,10 @@ public class MarkersActivity extends SherlockFragmentActivity
         Toast.makeText(this, "Drawing saved: " + filename, Toast.LENGTH_SHORT).show();
         v.setEnabled(true);
     }
+    
+    public void clickClear() {
+	mSlate.clear();
+    }
 
     public void clickSaveAndClear(View v) {
         if (mSlate.isEmpty()) return;
@@ -571,8 +582,7 @@ public class MarkersActivity extends SherlockFragmentActivity
     }
 
     public void clickShare(View v) {
-        hideOverflow();
-        setThingyEnabled(v, false);
+        //setThingyEnabled(v, false);
         final String filename = System.currentTimeMillis() + ".png";
         // can't use a truly temporary file because:
         // - we want mediascanner to give us a content: URI for it; some apps don't like file: URIs

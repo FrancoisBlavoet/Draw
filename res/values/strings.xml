@@ -20,5 +20,7 @@
     <string name="qr_title">QR Code for Markers</string>
     <string name="about_text">
     </string>
-    <string name="menu_back">back</string>
+    <string name="menu_back">Back</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_clear">DEV - clear</string>
 </resources>

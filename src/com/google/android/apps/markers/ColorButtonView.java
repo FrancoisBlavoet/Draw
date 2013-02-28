@@ -37,10 +37,10 @@ public class ColorButtonView extends View {
     protected void onDraw(Canvas canvas) {
 	// canvas.translate(mColorWheelRadius/2, mColorWheelRadius/2);
 	mPointerColor.setColor(mColor);
-	mColorWheelRectangle.set(getLeft() + this.getPaddingLeft(),
-				 getTop()  + this.getPaddingTop(),
-				 getLeft() + mColorWheelRadius + this.getPaddingRight(),
-				 getTop()  + mColorWheelRadius + this.getPaddingBottom());
+	mColorWheelRectangle.set(this.getPaddingLeft(),
+				 this.getPaddingTop(),
+				 mColorWheelRadius + this.getPaddingRight() + this.getPaddingLeft(),
+				 mColorWheelRadius + this.getPaddingBottom() + this.getPaddingTop());
 	
 	canvas.drawOval(mColorWheelRectangle, mPointerColor);
 
