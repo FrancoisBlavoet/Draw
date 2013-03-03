@@ -2,7 +2,6 @@ package com.google.android.apps.markers;
 
 import org.dsandler.apps.markers.R;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,11 +26,9 @@ public class ColorButtonView extends View {
 	super(context, attrs);
     }
 
-    @SuppressLint("NewApi")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-	int height = getDefaultSize(getSuggestedMinimumHeight(),
-		heightMeasureSpec);
+	int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
 	height = (int) Math.min(height, mColorWheelRadius  + getPaddingTop() + getPaddingBottom());
 	int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
 	width = (int) Math.min(width, mColorWheelRadius + getPaddingLeft() + getPaddingRight());
