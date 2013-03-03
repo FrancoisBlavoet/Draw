@@ -18,9 +18,11 @@
     <string name="app_name">Draw</string>
     <string name="about_title">About Markers</string>
     <string name="qr_title">QR Code for Markers</string>
-    <string name="about_text">
-    </string>
+    <string name="about_text"> </string>
     <string name="menu_back">Back</string>
     <string name="menu_share">Share</string>
-    <string name="menu_clear">DEV - clear</string>
+    <string name="menu_clear">DEV - Clear</string>
+    <string name="layer_mark">Slide to manage the layers</string>
+    <string name="menu_resize">Resize / Rotate</string>
+    
 </resources>

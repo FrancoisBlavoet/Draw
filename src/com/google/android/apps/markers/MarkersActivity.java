@@ -237,8 +237,7 @@ public class MarkersActivity extends SherlockFragmentActivity
 
 	loadSettings();
 
-	setPenType(0); // place holder params until they are replaced by the new
-		       // UI
+	setPenType(0); // place holder params until they are replaced by the new UI
 	setPenColor(mColor);
 	mSlate.setPenSize(1, 40);
 

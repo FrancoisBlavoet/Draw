@@ -1,5 +1,8 @@
 package com.google.android.apps.markers;
 
+import org.dsandler.apps.markers.R;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -12,8 +15,9 @@ public class ColorButtonView extends View {
 
     private Paint mPointerColor = new Paint(Paint.ANTI_ALIAS_FLAG);
     private RectF mColorWheelRectangle = new RectF();
-    int mColorWheelRadius = 100;
+    float mColorWheelRadius = getResources().getDimension(R.dimen.toolbar_color_button_diameter);
     private int mColor = Color.GRAY;
+    float mDensity = getResources().getDisplayMetrics().density;
 
     public ColorButtonView(Context context) {
 	super(context);
@@ -23,13 +27,14 @@ public class ColorButtonView extends View {
 	super(context, attrs);
     }
 
+    @SuppressLint("NewApi")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 	int height = getDefaultSize(getSuggestedMinimumHeight(),
 		heightMeasureSpec);
-	height = Math.min(height, mColorWheelRadius + getPaddingTop() + getPaddingBottom());
+	height = (int) Math.min(height, mColorWheelRadius  + getPaddingTop() + getPaddingBottom());
 	int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-	width = Math.min(width, mColorWheelRadius + getPaddingLeft() + getPaddingRight());
+	width = (int) Math.min(width, mColorWheelRadius + getPaddingLeft() + getPaddingRight());
 	setMeasuredDimension(width, height);
     }
 
@@ -40,7 +45,7 @@ public class ColorButtonView extends View {
 	mColorWheelRectangle.set(this.getPaddingLeft(),
 				 this.getPaddingTop(),
 				 mColorWheelRadius + this.getPaddingRight() + this.getPaddingLeft(),
-				 mColorWheelRadius + this.getPaddingBottom() + this.getPaddingTop());
+				 mColorWheelRadius  + this.getPaddingBottom() + this.getPaddingTop());
 	
 	canvas.drawOval(mColorWheelRectangle, mPointerColor);
 
