@@ -17,6 +17,7 @@
 package com.google.android.apps.markers;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.res.Resources;
@@ -38,6 +39,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import org.dsandler.apps.markers.R;
@@ -104,6 +106,10 @@ public class Slate extends View {
     private boolean mEmpty;
     
     private Region mDirtyRegion = new Region();
+    
+    public boolean mIsTilting = false ;
+    private ScaleGestureDetector mScaleDetector;
+    private float mScaleFactor = 1f;
 
     public interface SlateListener {
         void strokeStarted();
@@ -388,16 +394,16 @@ public class Slate extends View {
     
     public Slate(Context c, AttributeSet as) {
         super(c, as);
-        init();
+        init(c);
     }
     
     public Slate(Context c) {
     	super(c);
-    	init();
+    	init(c);
     }
     
     @SuppressLint("NewApi")
-    private void init() {
+    private void init(Context context) {
 //        setWillNotCacheDrawing(true);
 //        setDrawingCacheEnabled(false);
         
@@ -470,6 +476,7 @@ public class Slate extends View {
             mDebugPaints[4].setStyle(Paint.Style.FILL);
             mDebugPaints[4].setARGB(255, 128, 128, 128);
         }
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
     }
 
     public boolean isEmpty() { return mEmpty; }
@@ -674,8 +681,6 @@ public class Slate extends View {
 
     public void setPenColor(int color) {
         for (MarkersPlotter plotter : mStrokes) {
-            // XXX: todo: only do this if the stroke hasn't begun already
-            // ...or not; the current behavior allows RAINBOW MODE!!!1!
             plotter.setPenColor(color);
         }
     }
@@ -749,9 +754,55 @@ public class Slate extends View {
         return MotionEvent.TOOL_TYPE_FINGER;
     }
 
-    @SuppressLint("NewApi")
+    private class ScaleListener extends
+	    ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+	private float mInitialScaleFactor = -1;
+	private static final float SCALING_THRESHOLD = 0.3f;
+	private boolean mScaling = false;
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public boolean onScale(ScaleGestureDetector detector) {
+
+	    if (!mScaling) {
+		if (mInitialScaleFactor < 0) {
+		    mInitialScaleFactor = detector.getScaleFactor();
+		} else {
+		    final float deltaScale = detector.getScaleFactor()
+			    - mInitialScaleFactor;
+		    if (Math.abs(deltaScale) > SCALING_THRESHOLD) {
+			mScaling = true;
+			return true;
+		    }
+		}
+		return false;
+	    }
+
+	    mScaleFactor *= detector.getScaleFactor();
+	    mScaleFactor = Math.min(
+		    Math.max(mScaleFactor, 0.7f), 3.0f);
+	    setPivotX(mScaleDetector.getFocusX());
+		    setPivotY(mScaleDetector.getFocusY());
+
+	    setScaleX(mScaleFactor);
+	    setScaleY(mScaleFactor);
+	    Log.d("test", "" + detector.getScaleFactor());
+
+	    return true;
+	}
+
+    }
+
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+	if (mIsTilting) {
+	    mScaleDetector.onTouchEvent(event);
+	    return true;
+	}
+
         int action = event.getActionMasked();
         int N = event.getHistorySize();
         int P = event.getPointerCount();
@@ -759,7 +810,7 @@ public class Slate extends View {
 
         mEmpty = false;
          
-        
+
 
         
 

@@ -236,7 +236,7 @@ public class MarkersActivity extends SherlockFragmentActivity
 	});
 
 	loadSettings();
-
+	
 	setPenType(0); // place holder params until they are replaced by the new UI
 	setPenColor(mColor);
 	mSlate.setPenSize(1, 40);
@@ -342,6 +342,9 @@ public class MarkersActivity extends SherlockFragmentActivity
 	switch (item.getItemId()) {
 	case R.id.menu_back:
 	    clickUndo(null);
+	    break;
+	case R.id.menu_resize :	    
+	    mSlate.mIsTilting = mSlate.mIsTilting ? false : true ;
 	    break;
 	case R.id.menu_clear:
 	    clickClear();
