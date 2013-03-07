@@ -16,6 +16,8 @@
 
 package com.google.android.apps.markers;
 
+
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
@@ -39,7 +41,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import org.dsandler.apps.markers.R;
@@ -105,11 +106,7 @@ public class Slate extends View {
     
     private boolean mEmpty;
     
-    private Region mDirtyRegion = new Region();
-    
-    public boolean mIsTilting = false ;
-    private ScaleGestureDetector mScaleDetector;
-    private float mScaleFactor = 1f;
+    private Region mDirtyRegion = new Region();  
 
     public interface SlateListener {
         void strokeStarted();
@@ -402,7 +399,8 @@ public class Slate extends View {
     	init(c);
     }
     
-    @SuppressLint("NewApi")
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void init(Context context) {
 //        setWillNotCacheDrawing(true);
 //        setDrawingCacheEnabled(false);
@@ -476,7 +474,7 @@ public class Slate extends View {
             mDebugPaints[4].setStyle(Paint.Style.FILL);
             mDebugPaints[4].setARGB(255, 128, 128, 128);
         }
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+	
     }
 
     public boolean isEmpty() { return mEmpty; }
@@ -737,7 +735,9 @@ public class Slate extends View {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
     }
     
-    @SuppressLint("NewApi")
+
+    
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     final static int getToolTypeCompat(MotionEvent me, int index) {
         if (hasToolType()) {
             return me.getToolType(index);
@@ -754,64 +754,17 @@ public class Slate extends View {
         return MotionEvent.TOOL_TYPE_FINGER;
     }
 
-    private class ScaleListener extends
-	    ScaleGestureDetector.SimpleOnScaleGestureListener {
-
-	private float mInitialScaleFactor = -1;
-	private static final float SCALING_THRESHOLD = 0.3f;
-	private boolean mScaling = false;
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public boolean onScale(ScaleGestureDetector detector) {
-
-	    if (!mScaling) {
-		if (mInitialScaleFactor < 0) {
-		    mInitialScaleFactor = detector.getScaleFactor();
-		} else {
-		    final float deltaScale = detector.getScaleFactor()
-			    - mInitialScaleFactor;
-		    if (Math.abs(deltaScale) > SCALING_THRESHOLD) {
-			mScaling = true;
-			return true;
-		    }
-		}
-		return false;
-	    }
-
-	    mScaleFactor *= detector.getScaleFactor();
-	    mScaleFactor = Math.min(
-		    Math.max(mScaleFactor, 0.7f), 3.0f);
-	    setPivotX(mScaleDetector.getFocusX());
-		    setPivotY(mScaleDetector.getFocusY());
-
-	    setScaleX(mScaleFactor);
-	    setScaleY(mScaleFactor);
-	    Log.d("test", "" + detector.getScaleFactor());
-
-	    return true;
-	}
-
-    }
-
-
+      
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-	if (mIsTilting) {
-	    mScaleDetector.onTouchEvent(event);
-	    return true;
-	}
-
-        int action = event.getActionMasked();
+	
+	int action = event.getActionMasked();
         int N = event.getHistorySize();
         int P = event.getPointerCount();
         long time = event.getEventTime();
 
         mEmpty = false;
-         
-
-
         
 
         // starting a new touch? commit the previous state of the canvas

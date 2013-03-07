@@ -42,6 +42,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.PointF;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -54,6 +55,8 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -63,11 +66,13 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.google.android.apps.markers.GestureDetector.TranslationGestureDetector;
+import com.google.android.apps.markers.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends SherlockFragmentActivity 
-{
+public class MarkersActivity extends SherlockFragmentActivity {    
+    
     final static int LOAD_IMAGE = 1000;
 
     private static final String TAG = "Markers";
@@ -87,18 +92,28 @@ public class MarkersActivity extends SherlockFragmentActivity
     public ColorButtonView mColorButton;
     private ColorDialogFragment mColorDialog;
     public int mColor;
+    
+    private float mScaleFactor = 1.f;
+    private float mRotationDegrees = 0.f;
+    private float mTranslationX = 0.f;
+    private float mTranslationY = 0.f;  
+    private boolean mIsSlateInTiltMode = false;
+
+    private ScaleGestureDetector mScaleDetector;
+    private RotationGestureDetector mRotateDetector;
+    private TranslationGestureDetector mTranslationDetector;
+
 
     private View mDebugButton;
-    
+
     private SlidingMenu menu;
     private final Paint paint = new Paint();
-	private final ColorMatrix matrix = new ColorMatrix();	
-	private static boolean sHackReady;
-	private static boolean sHackAvailable;
-	private static Field sRecreateDisplayList;
-	private static Method sGetDisplayList;
+    private final ColorMatrix matrix = new ColorMatrix();
+    private static boolean sHackReady;
+    private static boolean sHackAvailable;
+    private static Field sRecreateDisplayList;
+    private static Method sGetDisplayList;
 
-    
     private Dialog mMenuDialog;
 
     private SharedPreferences mPrefs;
@@ -206,6 +221,11 @@ public class MarkersActivity extends SherlockFragmentActivity
 	if (icicle != null) {
 	    onRestoreInstanceState(icicle);
 	}
+	
+
+	mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
+	mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
+	mTranslationDetector = new TranslationGestureDetector(getApplicationContext(), new MoveListener());
 
 	menu = new SlidingMenu(this);
 	menu.setMode(SlidingMenu.LEFT);
@@ -240,8 +260,11 @@ public class MarkersActivity extends SherlockFragmentActivity
 	setPenType(0); // place holder params until they are replaced by the new UI
 	setPenColor(mColor);
 	mSlate.setPenSize(1, 40);
-
+        
     }
+    
+
+
 //-----------------------
 // Sliding menu methods :
     
@@ -344,7 +367,7 @@ public class MarkersActivity extends SherlockFragmentActivity
 	    clickUndo(null);
 	    break;
 	case R.id.menu_resize :	    
-	    mSlate.mIsTilting = mSlate.mIsTilting ? false : true ;
+	    mIsSlateInTiltMode = mIsSlateInTiltMode ? false : true ;
 	    break;
 	case R.id.menu_clear:
 	    clickClear();
@@ -354,6 +377,85 @@ public class MarkersActivity extends SherlockFragmentActivity
 	    break;
 	}
 	return true;
+    }
+    
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+	if (!mIsSlateInTiltMode) {
+	    return super.dispatchTouchEvent(event);
+	}
+
+	for (int i = 0; i < event.getPointerCount(); i++) {
+	    if (event.getY(i) < this.getSupportActionBar().getHeight()) {
+		return super.dispatchTouchEvent(event);
+	    }
+	}
+	mRotateDetector.onTouchEvent(event);
+	mScaleDetector.onTouchEvent(event);
+	mTranslationDetector.onTouchEvent(event);
+	// mSlate.setPivotX(250);
+	// mSlate.setPivotY(250);
+	return true;
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+	private float mInitialScaleFactor = -1;
+	private static final float SCALING_THRESHOLD = 0.3f;
+	private boolean mScaling = false;
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public boolean onScale(ScaleGestureDetector detector) {
+
+	    if (!mScaling) {
+		if (mInitialScaleFactor < 0) {
+		    mInitialScaleFactor = detector.getScaleFactor();
+		} else {
+		    final float deltaScale = detector.getScaleFactor()
+			    - mInitialScaleFactor;
+		    if (Math.abs(deltaScale) > SCALING_THRESHOLD) {
+			mScaling = true;
+			return true;
+		    }
+		}
+		return false;
+	    }
+
+	    mScaleFactor *= detector.getScaleFactor();
+	    mScaleFactor = Math.min(Math.max(mScaleFactor, 0.8f), 3.0f);
+
+	    mSlate.setScaleX(mScaleFactor);
+	    mSlate.setScaleY(mScaleFactor);
+	    // mSlate.setPivotX(mScaleDetector.getFocusX());
+	    // mSlate.setPivotY(mScaleDetector.getFocusY());
+	    return true;
+	}
+    }
+
+    private class RotateListener extends RotationGestureDetector.SimpleOnRotateGestureListener {
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public boolean onRotate(RotationGestureDetector detector) {
+	    mRotationDegrees -= detector.getRotationDegreesDelta();
+	    mSlate.setRotation(mRotationDegrees);
+	    // mSlate.setPivotX(mScaleDetector.getFocusX());
+	    // mSlate.setPivotY(mScaleDetector.getFocusY());
+	    return true;
+	}
+    }
+
+    private class MoveListener extends TranslationGestureDetector.SimpleOnMoveGestureListener {
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public boolean onMove(TranslationGestureDetector detector) {
+	    PointF delta = detector.getFocusDelta();
+	    mTranslationX += delta.x;
+	    mTranslationY += delta.y;
+	    mSlate.setTranslationX(mTranslationX);
+	    mSlate.setTranslationY(mTranslationY);
+	    return true;
+	}
     }
 
     @Override
