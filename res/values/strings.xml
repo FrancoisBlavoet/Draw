@@ -24,5 +24,7 @@
     <string name="menu_clear">DEV - Clear</string>
     <string name="layer_mark">Slide to manage the layers</string>
     <string name="menu_resize">Resize / Rotate</string>
+    <string name="menu_reset_orientation">Reset the orientation</string>
+    
     
 </resources>

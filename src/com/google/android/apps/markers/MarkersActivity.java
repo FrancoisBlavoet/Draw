@@ -64,6 +64,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.google.android.apps.markers.GestureDetector.TranslationGestureDetector;
@@ -122,40 +123,97 @@ public class MarkersActivity extends SherlockFragmentActivity {
 
     protected MediaScannerConnection mMediaScannerConnection;
     private String mPendingShareFile;
-    private MediaScannerConnectionClient mMediaScannerClient = 
-            new MediaScannerConnection.MediaScannerConnectionClient() {
-                @Override
-                public void onMediaScannerConnected() {
-                    if (DEBUG) Log.v(TAG, "media scanner connected");
-                    scanNext();
-                }
-                
-                private void scanNext() {
-                    synchronized (mDrawingsToScan) {
-                        if (mDrawingsToScan.isEmpty()) {
-                            mMediaScannerConnection.disconnect();
-                            return;
-                        }
-                        String fn = mDrawingsToScan.removeFirst();
-                        mMediaScannerConnection.scanFile(fn, "image/png");
-                    }
-                }
-        
-                @Override
-                public void onScanCompleted(String path, Uri uri) {
-                    if (DEBUG) Log.v(TAG, "File scanned: " + path);
-                    synchronized (mDrawingsToScan) {
-                        if (path.equals(mPendingShareFile)) {
-                            Intent sendIntent = new Intent(Intent.ACTION_SEND);
-                            sendIntent.setType("image/png");
-                            sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
-                            startActivity(Intent.createChooser(sendIntent, "Send drawing to:"));
-                            mPendingShareFile = null;
-                        }
-                        scanNext();
-                    }
-                }
-            };
+    private MediaScannerConnectionClient mMediaScannerClient = new MediaScannerConnection.MediaScannerConnectionClient() {
+	@Override
+	public void onMediaScannerConnected() {
+	    if (DEBUG)
+		Log.v(TAG, "media scanner connected");
+	    scanNext();
+	}
+
+	private void scanNext() {
+	    synchronized (mDrawingsToScan) {
+		if (mDrawingsToScan.isEmpty()) {
+		    mMediaScannerConnection.disconnect();
+		    return;
+		}
+		String fn = mDrawingsToScan.removeFirst();
+		mMediaScannerConnection.scanFile(fn, "image/png");
+	    }
+	}
+
+	@Override
+	public void onScanCompleted(String path, Uri uri) {
+	    if (DEBUG)
+		Log.v(TAG, "File scanned: " + path);
+	    synchronized (mDrawingsToScan) {
+		if (path.equals(mPendingShareFile)) {
+		    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+		    sendIntent.setType("image/png");
+		    sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+		    startActivity(Intent.createChooser(sendIntent,
+			    "Send drawing to:"));
+		    mPendingShareFile = null;
+		}
+		scanNext();
+	    }
+	}
+    };
+
+    private ActionMode mActionMode;
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+	// Called when the action mode is created; startActionMode() was called
+	@Override
+	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	    // Inflate a menu resource providing context menu items
+	    MenuInflater inflater = mode.getMenuInflater();
+	    inflater.inflate(R.menu.markers_activity_cab, menu);
+	    mIsSlateInTiltMode = true;	    
+	    return true;
+	}
+
+	// Called each time the action mode is shown. Always called after
+	// onCreateActionMode, but
+	// may be called multiple times if the mode is invalidated.
+	@Override
+	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	    return false; // Return false if nothing is done
+	}
+
+	// Called when the user selects a contextual menu item
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@Override
+	public boolean onActionItemClicked(ActionMode mode,
+		com.actionbarsherlock.view.MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.menu_cab_reset:
+		mScaleFactor = 1.f;
+		mSlate.setScaleX(mScaleFactor);
+		mSlate.setScaleY(mScaleFactor);
+		mRotationDegrees = 0.f;
+		mSlate.setRotation(mRotationDegrees);
+		mTranslationX = 0.f;
+		mTranslationY = 0.f;
+		mSlate.setTranslationX(mTranslationX);
+		mSlate.setTranslationY(mTranslationY);
+		mIsSlateInTiltMode = false;
+		// shareCurrentItem();
+		mode.finish(); // Action picked, so close the CAB
+		return true;
+	    default:
+		return false;
+	    }
+	}
+
+	// Called when the user exits the action mode
+	@Override
+	public void onDestroyActionMode(ActionMode mode) {
+	    mActionMode = null;
+	    mIsSlateInTiltMode = false;
+	}
+
+    };
 
 
 
@@ -367,7 +425,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	    clickUndo(null);
 	    break;
 	case R.id.menu_resize :	    
-	    mIsSlateInTiltMode = mIsSlateInTiltMode ? false : true ;
+	    mActionMode = this.startActionMode(mActionModeCallback);
 	    break;
 	case R.id.menu_clear:
 	    clickClear();
