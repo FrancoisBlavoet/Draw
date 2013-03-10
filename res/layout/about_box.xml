@@ -11,8 +11,8 @@
         android:layout_height="200dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/large_launcher_icon" />
-
+        android:src="@drawable/launcher_icon" />
+<!-- should be large_launcher_icon-->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
