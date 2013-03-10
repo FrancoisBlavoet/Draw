@@ -59,14 +59,15 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
+
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.Window;
 import com.google.android.apps.markers.GestureDetector.TranslationGestureDetector;
 import com.google.android.apps.markers.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
@@ -198,7 +199,6 @@ public class MarkersActivity extends SherlockFragmentActivity {
 		mSlate.setTranslationX(mTranslationX);
 		mSlate.setTranslationY(mTranslationY);
 		mIsSlateInTiltMode = false;
-		// shareCurrentItem();
 		mode.finish(); // Action picked, so close the CAB
 		return true;
 	    default:
@@ -240,19 +240,21 @@ public class MarkersActivity extends SherlockFragmentActivity {
     }
 
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onCreate(Bundle icicle) {
 	super.onCreate(icicle);
 
-	final Window win = getWindow();
-	WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-	lp.copyFrom(win.getAttributes());
-	lp.format = PixelFormat.RGBA_8888;
+	//final Window win = (Window) this.getWindow();
+	//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+	//lp.copyFrom(win.getAttributes());
+	//lp.format = PixelFormat.RGBA_8888;
 	// win.setBackgroundDrawableResource(R.drawable.transparent);
 	ColorDrawable cd = new ColorDrawable(Color.WHITE);
-	win.setBackgroundDrawable(cd);
+	//win.setBackgroundDrawable(cd);
 
-	win.setAttributes(lp);
+	//win.setAttributes(lp);
+	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 	// win.requestFeature(Window.FEATURE_NO_TITLE);
 
 	setContentView(R.layout.main);
@@ -278,13 +280,14 @@ public class MarkersActivity extends SherlockFragmentActivity {
 
 	if (icicle != null) {
 	    onRestoreInstanceState(icicle);
+	    
 	}
 	
-
+	
 	mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
 	mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
 	mTranslationDetector = new TranslationGestureDetector(getApplicationContext(), new MoveListener());
-
+	/*
 	menu = new SlidingMenu(this);
 	menu.setMode(SlidingMenu.LEFT);
 	menu.setShadowDrawable(R.drawable.shadow);
@@ -296,7 +299,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	menu.setMenu(R.layout.sliding_menu);
 	menu.setTouchModeMarginThreshold(getResources().getDimensionPixelOffset(R.dimen.toolbar_width));
 	
-
+	
 	menu.setBehindCanvasTransformer(new CanvasTransformer() {
 	    @Override
 	    public void transformCanvas(Canvas canvas, float percentOpen) {
@@ -311,15 +314,18 @@ public class MarkersActivity extends SherlockFragmentActivity {
 		updateColorFilter(percentOpen);
 		updatePaint(API_17, API_16);
 	    }
-	});
+	});*/
 
 	loadSettings();
 	
+
 	setPenType(0); // place holder params until they are replaced by the new UI
 	setPenColor(mColor);
 	mSlate.setPenSize(1, 40);
         
+	//getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_bg_black));
     }
+    
     
 
 
@@ -407,7 +413,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
         this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
-        mColorButton.setColor(mColor);
+        //mColorButton.setColor(mColor);
     }
     
     @Override

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res/org.dsandler.apps.markers"
     android:layout_width="100dip"
     android:layout_height="fill_parent"
-    android:background="@color/background_toolbar"
+    android:background="@android:color/transparent"
     app:columnCount="1" >
 
     <com.google.android.apps.markers.ColorButtonView
@@ -24,7 +24,7 @@
         app:layout_column="0"
         app:layout_gravity="center_vertical|center_horizontal"
         app:layout_row="0"
-        android:src="@drawable/ic_sliding_mark" 
+        android:src="@drawable/ico_grab_layer_norm" 
         android:contentDescription="@string/layer_mark"/>
 
 </android.support.v7.widget.GridLayout>

@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="DrawAppTheme" parent="@style/Theme.Sherlock.Light"></style>
+    <style name="DrawAppTheme" parent="@style/Theme.Sherlock">
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+    </style>
+
+    <style name="Widget.Styled.ActionBar" parent="@Widget.Sherlock.ActionBar">
+        <item name="android:background">@drawable/actionbar</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
 
     <style name="colorPickerStyle" parent="Theme.Sherlock.Light.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:cacheColorHint">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    
 
 </resources>
