@@ -8,7 +8,7 @@
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="@Widget.Sherlock.ActionBar">
-        <item name="android:background">@drawable/actionbar</item>
+        <item name="android:background">@drawable/bg_actionbar</item>
         <item name="windowActionBarOverlay">true</item>
     </style>
 

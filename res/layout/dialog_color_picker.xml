@@ -1,12 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent" >
+    android:background="@android:color/transparent"
+    android:orientation="vertical" >
 
-    <com.google.android.apps.markers.MarkersColorPicker
+    <com.larswerkman.colorpicker.ColorPicker
         android:id="@+id/picker"
         android:layout_width="286dp"
         android:layout_height="286dp"
          android:background="@android:color/transparent" />
 
-</FrameLayout>
+    <android.support.v7.widget.Space
+        android:id="@+id/space1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+    
+    <com.larswerkman.colorpicker.SVBar
+        android:id="@+id/svbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -12,12 +12,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.google.android.apps.markers.MarkersColorPicker.ColorPickerCallback;
+import com.larswerkman.colorpicker.ColorPicker;
+import com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener;
+import com.larswerkman.colorpicker.SVBar;
 
-public class ColorDialogFragment extends SherlockDialogFragment {
+public class ColorDialogFragment extends SherlockDialogFragment implements OnColorChangedListener {
 
-    public MarkersColorPicker mColorPicker;
+    public ColorPicker mColorPicker;
+    private SVBar msvBar;
     public int mOldColor = Color.BLACK ;
+   
 
     public ColorDialogFragment() {
 
@@ -31,19 +35,13 @@ public class ColorDialogFragment extends SherlockDialogFragment {
 		.getAttributes();
 	wmlp.gravity = Gravity.LEFT;
 	wmlp.x = 180;
-	mColorPicker = (MarkersColorPicker) view.findViewById(R.id.picker);
+	mColorPicker = (ColorPicker) view.findViewById(R.id.picker);
 	mColorPicker.setOldCenterColor(mOldColor);
 	mColorPicker.setColor(mOldColor);
-	mColorPicker.setNewCenterColor(mOldColor);
-	mColorPicker.setOnColorChangedListener(new ColorPickerCallback() {
-	    @Override
-	    public void onColorChanged(int color) {
-		mOldColor = color;
-		((MarkersActivity) getActivity()).setPenColor(color);
-		((MarkersActivity) getActivity()).mColorButton.setColor(color);
-		((MarkersActivity) getActivity()).mColor = color;
-	    }
-	});
+	mColorPicker.setNewCenterColor(mOldColor);	
+	msvBar = (SVBar) view.findViewById(R.id.svbar);
+	mColorPicker.addSVBar(msvBar);
+	mColorPicker.setOnColorChangedListener(this);
 	return view;
     }
 
@@ -57,6 +55,14 @@ public class ColorDialogFragment extends SherlockDialogFragment {
     @Override
     public void onResume() {
 	super.onResume();
+    }
+
+    @Override
+    public void onColorChanged(int color) {
+	mOldColor = color;
+	((MarkersActivity) getActivity()).setPenColor(color);
+	((MarkersActivity) getActivity()).mColorButton.setColor(color);
+	((MarkersActivity) getActivity()).mColor = color;
     }
 
 }

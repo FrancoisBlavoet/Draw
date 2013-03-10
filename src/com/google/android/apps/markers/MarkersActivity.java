@@ -245,17 +245,10 @@ public class MarkersActivity extends SherlockFragmentActivity {
     public void onCreate(Bundle icicle) {
 	super.onCreate(icicle);
 
-	//final Window win = (Window) this.getWindow();
-	//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-	//lp.copyFrom(win.getAttributes());
-	//lp.format = PixelFormat.RGBA_8888;
-	// win.setBackgroundDrawableResource(R.drawable.transparent);
-	ColorDrawable cd = new ColorDrawable(Color.WHITE);
-	//win.setBackgroundDrawable(cd);
-
-	//win.setAttributes(lp);
+	WindowManager.LayoutParams lp = getWindow().getAttributes();
+	lp.format = PixelFormat.RGBA_8888;
+	getWindow().setAttributes(lp);
 	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-	// win.requestFeature(Window.FEATURE_NO_TITLE);
 
 	setContentView(R.layout.main);
 
@@ -413,7 +406,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
         this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
-        //mColorButton.setColor(mColor);
+        mColorButton.setColor(mColor);
     }
     
     @Override

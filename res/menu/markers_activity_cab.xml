@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_cab_reset"
-        android:icon="@drawable/ic_navigation_crop"
+        android:icon="@drawable/ico_fit_orientation"
         android:showAsAction="always|withText"
         android:title="@string/menu_reset_orientation"/>
 
