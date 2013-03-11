@@ -1,30 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/org.dsandler.apps.markers"
-    android:layout_width="100dip"
-    android:layout_height="fill_parent"
-    android:background="@android:color/transparent"
-    app:columnCount="1" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="fill_parent" >
+
+    <android.support.v7.widget.Space
+        android:id="@+id/toolbar_space"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
 
     <com.google.android.apps.markers.ColorButtonView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/colorbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_column="0"
-        app:layout_gravity="center_horizontal"
-        app:layout_row="0"
-        android:onClick="showColorPicker"
-        android:paddingTop="50dp" />
+        android:layout_below="@id/toolbar_space"
+        android:layout_centerHorizontal="true"
+        android:onClick="showColorPicker" />
 
     <ImageView
         android:id="@+id/slidingMark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_column="0"
-        app:layout_gravity="center_vertical|center_horizontal"
-        app:layout_row="0"
-        android:src="@drawable/ico_grab_layer_norm" 
-        android:contentDescription="@string/layer_mark"/>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/layer_mark"
+        android:src="@drawable/ico_grab_layer_norm" />
 
-</android.support.v7.widget.GridLayout>
+</RelativeLayout>

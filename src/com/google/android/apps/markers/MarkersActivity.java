@@ -36,14 +36,14 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
+//import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
-import android.graphics.drawable.ColorDrawable;
+//import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
@@ -71,7 +71,7 @@ import com.actionbarsherlock.view.Window;
 import com.google.android.apps.markers.GestureDetector.TranslationGestureDetector;
 import com.google.android.apps.markers.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
-import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
+//import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
 public class MarkersActivity extends SherlockFragmentActivity {    
     
@@ -161,6 +161,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	}
     };
 
+    @SuppressWarnings("unused")
     private ActionMode mActionMode;
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
