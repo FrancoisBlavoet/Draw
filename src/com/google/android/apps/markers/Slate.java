@@ -154,6 +154,10 @@ public class Slate extends View {
             mRenderer.setPenColor(color);
         }
         
+        public void  setPenOpacity(int opacity) {
+            mRenderer.setPenOpacity(opacity);
+        }
+        
         public void finish(long time) {
             mLastPressure = -1f;
             mCoordBuffer.finish();
@@ -196,6 +200,8 @@ public class Slate extends View {
 
         private int mPenColor;
         private int mPenType;
+        private int mInkDensity;// = 0xff; // set to 0x20 or so for a felt-tip look, 0xff for traditional Markers
+        
 
         private int mShape = SHAPE_CIRCLE; // SHAPE_BITMAP_AIRBRUSH;
 
@@ -204,9 +210,16 @@ public class Slate extends View {
         
         private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         
-        int mInkDensity = 0xff; // set to 0x20 or so for a felt-tip look, 0xff for traditional Markers
         
         public SmoothStroker() {
+        }
+        
+        private void setPenOpacity (int opacity) {
+            mInkDensity = opacity;
+            if (mPenColor != 0) {
+        	mPaint.setAlpha(opacity);
+        	mInkDensity = opacity;
+            }
         }
 
         public void setPenColor(int color) {
@@ -689,6 +702,12 @@ public class Slate extends View {
         }
     }
     
+    public void setPenOpacity(int opacity) {
+        for (MarkersPlotter plotter : mStrokes) {
+            plotter.setPenOpacity(opacity);
+        }
+    }
+     
     @Override
     protected void onSizeChanged(int w, int h, int oldw,
             int oldh) {

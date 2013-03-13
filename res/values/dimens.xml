@@ -29,6 +29,9 @@
     <dimen name="slidingmenu_offset">120dp</dimen>
     <dimen name="toolbar_width">100dip</dimen>
     <dimen name="toolbar_color_button_diameter">50dip</dimen>
+    <dimen name="seekbar_width">400dip</dimen>
+    <dimen name="seekbar_between">50dip</dimen>
+    <dimen name="margin_action_bar_slider_icon_right">20dip</dimen>
      
 
 </resources>

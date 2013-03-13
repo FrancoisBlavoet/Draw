@@ -61,8 +61,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -73,7 +76,7 @@ import com.google.android.apps.markers.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
 //import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends SherlockFragmentActivity {    
+public class MarkersActivity extends SherlockFragmentActivity  implements OnSeekBarChangeListener{    
     
     final static int LOAD_IMAGE = 1000;
 
@@ -87,6 +90,8 @@ public class MarkersActivity extends SherlockFragmentActivity {
     public static final String PREF_LAST_TOOL = "tool";
     public static final String PREF_LAST_TOOL_TYPE = "tool_type";
     public static final String PREF_LAST_COLOR = "color";
+    
+    
 
     private boolean mJustLoadedImage = false;
 
@@ -94,6 +99,9 @@ public class MarkersActivity extends SherlockFragmentActivity {
     public ColorButtonView mColorButton;
     private ColorDialogFragment mColorDialog;
     public int mColor;
+    private SeekBar mBrushSizeBar;
+    private SeekBar mBrushTransparencyBar;
+    private  float DENSITY;
     
     private float mScaleFactor = 1.f;
     private float mRotationDegrees = 0.f;
@@ -250,7 +258,7 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	lp.format = PixelFormat.RGBA_8888;
 	getWindow().setAttributes(lp);
 	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-
+	DENSITY  = getResources().getDisplayMetrics().density;
 	setContentView(R.layout.main);
 
 	mColorButton = (ColorButtonView) this.findViewById(R.id.colorbutton);
@@ -277,6 +285,16 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	    
 	}
 	
+	ActionBar actionBar = this.getSupportActionBar();
+	View mActionBarView = getLayoutInflater().inflate(R.layout.seekbars, null);
+	actionBar.setCustomView(mActionBarView);
+	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //| ActionBar.DISPLAY_SHOW_HOME);
+	mBrushSizeBar =  (SeekBar)findViewById(R.id.brush_size_bar);
+	mBrushSizeBar.setOnSeekBarChangeListener(this);
+	mBrushSizeBar.setProgress(10);
+	mBrushTransparencyBar =  (SeekBar)findViewById(R.id.brush_transparency_bar);
+	mBrushTransparencyBar.setOnSeekBarChangeListener(this);
+	mBrushTransparencyBar.setProgress(0);
 	
 	mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
 	mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
@@ -311,13 +329,9 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	});*/
 
 	loadSettings();
-	
-
 	setPenType(0); // place holder params until they are replaced by the new UI
-	setPenColor(mColor);
-	mSlate.setPenSize(1, 40);
-        
-	//getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.ab_bg_black));
+	setPenColor(mColor);    
+
     }
     
     
@@ -514,6 +528,29 @@ public class MarkersActivity extends SherlockFragmentActivity {
 	    mSlate.setTranslationY(mTranslationY);
 	    return true;
 	}
+    }
+    
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress,
+    		boolean fromUser) {
+	switch (seekBar.getId()) {
+	case R.id.brush_size_bar :
+	    mSlate.setPenSize(2 +progress/DENSITY, 4 + 4 * progress /DENSITY);
+	    break;
+	case R.id.brush_transparency_bar :
+	    mSlate.setPenOpacity(255 - progress *255/100);
+	    break;
+	}
+    }
+    
+
+    
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {	
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {	
     }
 
     @Override

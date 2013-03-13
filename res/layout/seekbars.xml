@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/size_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/margin_action_bar_slider_icon_right"
+        android:contentDescription="@string/desc_brush_size"
+        android:src="@drawable/ico_brushsize" />
+
+    <SeekBar
+        android:id="@+id/brush_size_bar"
+        android:layout_width="@dimen/seekbar_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:max="100"
+        android:progressDrawable="@drawable/seekbar_line"
+        android:thumb="@drawable/seekbar_scruber" />
+
+    <ImageView
+        android:id="@+id/transparency_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="@dimen/margin_action_bar_slider_icon_right"
+        android:contentDescription="@string/desc_brush_oppacity"
+        android:src="@drawable/ico_transparent" />
+
+    <SeekBar
+        android:id="@+id/brush_transparency_bar"
+        android:layout_width="@dimen/seekbar_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:max="100"
+        android:progressDrawable="@drawable/seekbar_line"
+        android:thumb="@drawable/seekbar_scruber" />
+
+</LinearLayout>

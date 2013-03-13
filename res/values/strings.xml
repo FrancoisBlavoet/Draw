@@ -25,6 +25,9 @@
     <string name="layer_mark">Slide to manage the layers</string>
     <string name="menu_resize">Resize / Rotate</string>
     <string name="menu_reset_orientation">Reset the orientation</string>
+    <string name="desc_brush_size">Pick the brush size</string>
+     <string name="desc_brush_oppacity">Pick the brush transparency</string>
+    
     
     
 </resources>

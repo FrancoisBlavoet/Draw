@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@android:id/background"
+        android:drawable="@drawable/scrubber_track_holo_custom"/>
+    <item android:id="@android:id/progress">
+        <scale
+            android:drawable="@drawable/scrubber_primary_holo_custom"
+            android:scaleWidth="100%" />
+    </item>
+
+</layer-list>
