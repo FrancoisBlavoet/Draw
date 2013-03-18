@@ -43,6 +43,8 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.drawable.Drawable;
 //import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
@@ -61,6 +63,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
@@ -102,6 +105,9 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     private SeekBar mBrushSizeBar;
     private SeekBar mBrushTransparencyBar;
     private  float DENSITY;
+    private ImageButton mBrushButton;
+    private ImageButton mEraserButton;
+    private boolean mIsPenUsed = true;
     
     private float mScaleFactor = 1.f;
     private float mRotationDegrees = 0.f;
@@ -281,20 +287,26 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 		MarkersActivity.this, mMediaScannerClient);
 
 	if (icicle != null) {
-	    onRestoreInstanceState(icicle);
-	    
+	    onRestoreInstanceState(icicle);	    
 	}
 	
 	ActionBar actionBar = this.getSupportActionBar();
-	View mActionBarView = getLayoutInflater().inflate(R.layout.seekbars, null);
-	actionBar.setCustomView(mActionBarView);
-	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //| ActionBar.DISPLAY_SHOW_HOME);
-	mBrushSizeBar =  (SeekBar)findViewById(R.id.brush_size_bar);
+	View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_cv, null);
+	actionBar.setCustomView(mActionBarView);	
+	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+		| ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+	actionBar.setTitle(this.getString(R.string.draw_activity_title));
+
+	mBrushSizeBar = (SeekBar) findViewById(R.id.brush_size_bar);
 	mBrushSizeBar.setOnSeekBarChangeListener(this);
 	mBrushSizeBar.setProgress(10);
-	mBrushTransparencyBar =  (SeekBar)findViewById(R.id.brush_transparency_bar);
+	mBrushTransparencyBar = (SeekBar) findViewById(R.id.brush_transparency_bar);
 	mBrushTransparencyBar.setOnSeekBarChangeListener(this);
 	mBrushTransparencyBar.setProgress(0);
+	
+	mBrushButton = (ImageButton) findViewById(R.id.brush_button);
+	mBrushButton.setSelected(true);
+	mEraserButton = (ImageButton) findViewById(R.id.eraser_button);	
 	
 	mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
 	mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
@@ -333,8 +345,6 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 	setPenColor(mColor);    
 
     }
-    
-    
 
 
 //-----------------------
@@ -538,7 +548,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 	    mSlate.setPenSize(2 +progress/DENSITY, 4 + 4 * progress /DENSITY);
 	    break;
 	case R.id.brush_transparency_bar :
-	    mSlate.setPenOpacity(255 - progress *255/100);
+	    mSlate.setPenOpacity(255 - progress);
 	    break;
 	}
     }
@@ -859,6 +869,26 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     
     public void setPenType(int type) {
         mSlate.setPenType(type);
+    }
+     
+    public void onBrushButtonClick(View v) {
+	if (!mIsPenUsed) {
+	    mIsPenUsed = true;
+	    mBrushButton.setSelected(true);
+	    mEraserButton.setSelected(false);
+	    setPenColor(mColor);
+	    //Drawable mBrushButtonBG = mBrushButton.getBackground();
+	    //mBrushButtonBG.setColorFilter(mColor, Mode.MULTIPLY);
+	}
+    }
+    
+    public void onEraserButtonClick(View v) {
+	if (mIsPenUsed) {
+	    mIsPenUsed = false;
+	mEraserButton.setSelected(true);
+	mBrushButton.setSelected(false);
+	setPenColor(0);
+	}
     }
     
     protected void loadImageFromIntent(Intent imageReturnedIntent) {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:layout_gravity="fill_vertical"
+    android:layout_marginLeft="20dp"
+    android:divider="@drawable/divider_vertical_holo_dark"
+    android:dividerPadding="15dip"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:showDividers="middle" >
+
+    <ImageButton
+        android:id="@+id/brush_button"
+        android:layout_width="@dimen/action_bar_brush_buttons_width"
+        android:layout_height="fill_parent"
+        android:background="@drawable/brush_button_background"
+        android:contentDescription="@string/brush_button"
+        android:onClick="onBrushButtonClick"
+        android:soundEffectsEnabled="true"
+        android:src="@drawable/button_brush" />
+
+    <ImageButton
+        android:id="@+id/eraser_button"
+        android:layout_width="@dimen/action_bar_brush_buttons_width"
+        android:layout_height="fill_parent"
+        android:background="@drawable/brush_button_background"
+        android:contentDescription="@string/eraser_button"
+        android:onClick="onEraserButtonClick"
+        android:src="@drawable/button_eraser" />
+
+</LinearLayout>
