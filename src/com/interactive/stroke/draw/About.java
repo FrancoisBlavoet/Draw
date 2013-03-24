@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +33,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 class About {
     static char buf[] = new char[1024];

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -80,8 +80,8 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.Window;
-import com.google.android.apps.markers.GestureDetector.TranslationGestureDetector;
-import com.google.android.apps.markers.GestureDetector.RotationGestureDetector;
+import com.interactive.stroke.draw.GestureDetector.TranslationGestureDetector;
+import com.interactive.stroke.draw.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
 //import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 

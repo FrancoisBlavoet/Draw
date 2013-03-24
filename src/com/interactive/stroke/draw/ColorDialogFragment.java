@@ -1,6 +1,6 @@
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.larswerkman.colorpicker.ColorPicker;

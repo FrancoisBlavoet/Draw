@@ -1,4 +1,4 @@
-package com.google.android.apps.markers.GestureDetector;
+package com.interactive.stroke.draw.GestureDetector;
 
 import android.content.Context;
 import android.graphics.PointF;

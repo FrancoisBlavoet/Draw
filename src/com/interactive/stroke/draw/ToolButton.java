@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

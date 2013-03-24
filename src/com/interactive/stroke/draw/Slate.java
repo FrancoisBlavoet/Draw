@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
 
 
@@ -43,7 +43,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 public class Slate extends View {
 

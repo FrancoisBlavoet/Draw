@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.SystemClock;
 import android.view.MotionEvent;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class Spot {
 	public float x, y;
 	public float size, pressure;

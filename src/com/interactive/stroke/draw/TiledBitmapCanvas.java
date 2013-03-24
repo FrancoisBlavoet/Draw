@@ -1,4 +1,4 @@
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
 import java.util.ArrayList;
 

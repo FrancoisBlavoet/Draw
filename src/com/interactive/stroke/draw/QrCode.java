@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Build;
 import android.widget.ImageView;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 class QrCode {
-	static void show(final Activity activity) {
-        final AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-		    builder = new AlertDialog.Builder(activity, android.R.style.Theme_Light_Panel);
-        } else {
-		    builder = new AlertDialog.Builder(activity);
-        }
-		builder.setTitle(null);
-		builder.setCancelable(true);
-		ImageView iv = new ImageView(activity);
-		iv.setImageResource(R.drawable.qr);
-		builder.setView(iv);
-		builder.create().show();
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    static void show(final Activity activity) {
+	final AlertDialog.Builder builder;
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+	    builder = new AlertDialog.Builder(activity,
+		    android.R.style.Theme_Light_Panel);
+	} else {
+	    builder = new AlertDialog.Builder(activity);
 	}
+	builder.setTitle(null);
+	builder.setCancelable(true);
+	ImageView iv = new ImageView(activity);
+	iv.setImageResource(R.drawable.qr);
+	builder.setView(iv);
+	builder.create().show();
+    }
 }

@@ -33,6 +33,6 @@
     <dimen name="seekbar_between">50dip</dimen>
     <dimen name="action_bar_slider_icon_right_margin">20dip</dimen>
     <dimen name="action_bar_brush_buttons_width">50dip</dimen>
-     
+    <dimen name="notification_bar_height">25dip</dimen>
 
 </resources>

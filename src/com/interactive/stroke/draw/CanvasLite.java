@@ -1,4 +1,4 @@
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

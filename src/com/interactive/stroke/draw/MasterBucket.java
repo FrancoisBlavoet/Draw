@@ -1,6 +1,6 @@
-package com.google.android.apps.markers;
+package com.interactive.stroke.draw;
 
-import org.dsandler.apps.markers.R;
+import com.interactive.stroke.draw.R;
 
 import android.content.Context;
 import android.graphics.Bitmap;

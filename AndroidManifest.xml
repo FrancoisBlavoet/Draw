@@ -15,9 +15,9 @@
   limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.dsandler.apps.markers"
-    android:versionCode="40"
-    android:versionName="1.1.1" >
+    package="com.interactive.stroke.draw"
+    android:versionCode="1"
+    android:versionName="0.1-almost" >
  
     <uses-sdk
         android:minSdkVersion="10"
@@ -40,7 +40,7 @@
         android:largeHeap="true" 
         android:theme="@style/DrawAppTheme" >
         <activity
-            android:name="com.google.android.apps.markers.MarkersActivity"
+            android:name="com.interactive.stroke.draw.MarkersActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>
