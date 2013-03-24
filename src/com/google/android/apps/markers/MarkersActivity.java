@@ -30,6 +30,7 @@ import org.dsandler.apps.markers.R;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -42,6 +43,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.drawable.Drawable;
@@ -56,6 +58,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -63,6 +68,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -99,7 +105,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     private boolean mJustLoadedImage = false;
 
     private Slate mSlate;
-    public ColorButtonView mColorButton;
+    public MasterBucket mMasterBucket;
     private ColorDialogFragment mColorDialog;
     public int mColor;
     private SeekBar mBrushSizeBar;
@@ -124,7 +130,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 
     private SlidingMenu menu;
     private final Paint paint = new Paint();
-    private final ColorMatrix matrix = new ColorMatrix();
+    private final ColorMatrix menuMatrix = new ColorMatrix();
     private static boolean sHackReady;
     private static boolean sHackAvailable;
     private static Field sRecreateDisplayList;
@@ -259,15 +265,14 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     @Override
     public void onCreate(Bundle icicle) {
 	super.onCreate(icicle);
-
+	
 	WindowManager.LayoutParams lp = getWindow().getAttributes();
 	lp.format = PixelFormat.RGBA_8888;
 	getWindow().setAttributes(lp);
 	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 	DENSITY  = getResources().getDisplayMetrics().density;
 	setContentView(R.layout.main);
-
-	mColorButton = (ColorButtonView) this.findViewById(R.id.colorbutton);
+	mMasterBucket = (MasterBucket) this.findViewById(R.id.masterBucket);
 	// mSlate = (Slate) getLastNonConfigurationInstance();
 	if (mSlate == null) {
 	    mSlate = new Slate(this);
@@ -380,8 +385,8 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     }
 
     private void updateColorFilter(float percentOpen) {
-	matrix.setSaturation(percentOpen);
-	ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+	menuMatrix.setSaturation(percentOpen);
+	ColorMatrixColorFilter filter = new ColorMatrixColorFilter(menuMatrix);
 	paint.setColorFilter(filter);
     }
 
@@ -431,7 +436,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
         this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
-        mColorButton.setColor(mColor);
+        mMasterBucket.setColor(mColor);
     }
     
     @Override
@@ -468,9 +473,11 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 	}
 
 	for (int i = 0; i < event.getPointerCount(); i++) {
-	    if (event.getY(i) < this.getSupportActionBar().getHeight()) {
+	    if (event.getY(i) < this.getSupportActionBar().getHeight() + 
+		    getResources().getDimension(R.dimen.notification_bar_height)) {
 		return super.dispatchTouchEvent(event);
 	    }
+	    
 	}
 	mRotateDetector.onTouchEvent(event);
 	mScaleDetector.onTouchEvent(event);
@@ -877,8 +884,6 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 	    mBrushButton.setSelected(true);
 	    mEraserButton.setSelected(false);
 	    setPenColor(mColor);
-	    //Drawable mBrushButtonBG = mBrushButton.getBackground();
-	    //mBrushButtonBG.setColorFilter(mColor, Mode.MULTIPLY);
 	}
     }
     

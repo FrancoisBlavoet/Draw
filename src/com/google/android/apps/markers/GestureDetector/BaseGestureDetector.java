@@ -56,7 +56,9 @@ public abstract class BaseGestureDetector {
 	mCurrentEvent = MotionEvent.obtain(event);
 
 	mCurrentPressure = event.getPressure(event.getActionIndex());
-	mPreviousPressure = previousEvent.getPressure(previousEvent.getActionIndex());
+	if (mPreviousEvent != null) {
+	    mPreviousPressure = previousEvent.getPressure(previousEvent.getActionIndex());
+	}
     }
 
     protected void resetState() {

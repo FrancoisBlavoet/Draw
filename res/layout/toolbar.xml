@@ -7,14 +7,15 @@
         android:layout_width="match_parent"
         android:layout_height="100dp" />
 
-    <com.google.android.apps.markers.ColorButtonView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/colorbutton"
+    <com.google.android.apps.markers.MasterBucket
+        android:id="@+id/masterBucket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_space"
+        android:layout_below="@+id/toolbar_space"
         android:layout_centerHorizontal="true"
-        android:onClick="showColorPicker" />
+        android:background="@null"
+        android:onClick="showColorPicker"
+        android:src="@drawable/color_masterbucket_norm" />
 
     <ImageView
         android:id="@+id/slidingMark"

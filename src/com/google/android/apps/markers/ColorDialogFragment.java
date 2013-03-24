@@ -5,7 +5,6 @@ import org.dsandler.apps.markers.R;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +30,6 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 	View view = inflater.inflate(R.layout.dialog_color_picker, container);
-	WindowManager.LayoutParams wmlp = getDialog().getWindow()
-		.getAttributes();
-	wmlp.gravity = Gravity.LEFT;
-	wmlp.x = 180;
 	mColorPicker = (ColorPicker) view.findViewById(R.id.picker);
 	mColorPicker.setOldCenterColor(mOldColor);
 	mColorPicker.setColor(mOldColor);
@@ -61,7 +56,7 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     public void onColorChanged(int color) {
 	mOldColor = color;
 	((MarkersActivity) getActivity()).setPenColor(color);
-	((MarkersActivity) getActivity()).mColorButton.setColor(color);
+	((MarkersActivity) getActivity()).mMasterBucket.setColor(color);
 	((MarkersActivity) getActivity()).mColor = color;
     }
 
