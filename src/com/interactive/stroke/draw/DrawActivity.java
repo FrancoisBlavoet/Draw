@@ -85,7 +85,7 @@ import com.interactive.stroke.draw.GestureDetector.RotationGestureDetector;
 import com.slidingmenu.lib.SlidingMenu;
 //import com.slidingmenu.lib.SlidingMenu.CanvasTransformer;
 
-public class MarkersActivity extends SherlockFragmentActivity  implements OnSeekBarChangeListener{    
+public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBarChangeListener{    
     
     final static int LOAD_IMAGE = 1000;
 
@@ -289,7 +289,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
 	slateContainer.addView(mSlate, 0);
 
 	mMediaScannerConnection = new MediaScannerConnection(
-		MarkersActivity.this, mMediaScannerClient);
+		DrawActivity.this, mMediaScannerClient);
 
 	if (icicle != null) {
 	    onRestoreInstanceState(icicle);	    
@@ -435,7 +435,7 @@ public class MarkersActivity extends SherlockFragmentActivity  implements OnSeek
     
     private void loadSettings() {
         mPrefs = getPreferences(MODE_PRIVATE);
-        this.mColor = mPrefs.getInt(MarkersActivity.PREF_LAST_COLOR, Color.BLACK);
+        this.mColor = mPrefs.getInt(DrawActivity.PREF_LAST_COLOR, Color.BLACK);
         mMasterBucket.setColor(mColor);
     }
     

@@ -54,9 +54,9 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     @Override
     public void onColorChanged(int color) {
 	mOldColor = color;
-	((MarkersActivity) getActivity()).setPenColor(color);
-	((MarkersActivity) getActivity()).mMasterBucket.setColor(color);
-	((MarkersActivity) getActivity()).mColor = color;
+	((DrawActivity) getActivity()).setPenColor(color);
+	((DrawActivity) getActivity()).mMasterBucket.setColor(color);
+	((DrawActivity) getActivity()).mColor = color;
     }
 
 }

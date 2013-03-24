@@ -40,7 +40,7 @@
         android:largeHeap="true" 
         android:theme="@style/DrawAppTheme" >
         <activity
-            android:name="com.interactive.stroke.draw.MarkersActivity"
+            android:name="com.interactive.stroke.draw.DrawActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>

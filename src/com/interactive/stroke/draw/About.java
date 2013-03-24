@@ -66,7 +66,7 @@ class About {
         return version;
     }
 
-	static void show(final MarkersActivity activity) {
+	static void show(final DrawActivity activity) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(null);
         builder.setCancelable(true);
