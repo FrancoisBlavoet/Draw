@@ -32,7 +32,6 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
 	mColorPicker = (ColorPicker) view.findViewById(R.id.picker);
 	mColorPicker.setOldCenterColor(mOldColor);
 	mColorPicker.setColor(mOldColor);
-	mColorPicker.setNewCenterColor(mOldColor);	
 	msvBar = (SVBar) view.findViewById(R.id.svbar);
 	mColorPicker.addSVBar(msvBar);
 	mColorPicker.setOnColorChangedListener(this);
@@ -49,7 +48,9 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     @Override
     public void onResume() {
 	super.onResume();
-    }
+	mColorPicker.setOldCenterColor(mOldColor);
+	mColorPicker.setColor(mOldColor);
+	}
 
     @Override
     public void onColorChanged(int color) {
