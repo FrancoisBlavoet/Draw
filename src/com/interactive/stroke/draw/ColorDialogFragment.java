@@ -1,7 +1,5 @@
 package com.interactive.stroke.draw;
 
-import com.interactive.stroke.draw.R;
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -12,12 +10,14 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.larswerkman.colorpicker.ColorPicker;
 import com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener;
-import com.larswerkman.colorpicker.SVBar;
+import com.larswerkman.colorpicker.SaturationBar;
+import com.larswerkman.colorpicker.ValueBar;
 
 public class ColorDialogFragment extends SherlockDialogFragment implements OnColorChangedListener {
 
     public ColorPicker mColorPicker;
-    private SVBar msvBar;
+    public SaturationBar mSaturation;
+    public ValueBar mValueBar;
     public int mOldColor = Color.BLACK ;
    
 
@@ -29,11 +29,15 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	    Bundle savedInstanceState) {
 	View view = inflater.inflate(R.layout.dialog_color_picker, container);
-	mColorPicker = (ColorPicker) view.findViewById(R.id.picker);
+	mColorPicker = (ColorPicker) view.findViewById(R.id.colorPicker);
+	mSaturation = (SaturationBar) view.findViewById(R.id.saturationBar);
+	mValueBar = (ValueBar) view.findViewById(R.id.valueBar);
+	
 	mColorPicker.setOldCenterColor(mOldColor);
 	mColorPicker.setColor(mOldColor);
-	msvBar = (SVBar) view.findViewById(R.id.svbar);
-	mColorPicker.addSVBar(msvBar);
+	
+	mColorPicker.addSaturationBar(mSaturation);
+	mColorPicker.addValueBar(mValueBar);
 	mColorPicker.setOnColorChangedListener(this);
 	return view;
     }
