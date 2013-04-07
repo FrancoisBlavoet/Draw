@@ -487,14 +487,16 @@ public class Slate extends View {
             mDebugPaints[4].setStyle(Paint.Style.FILL);
             mDebugPaints[4].setARGB(255, 128, 128, 128);
         }
-	
+        float density = res.getDisplayMetrics().density;
+        mRadiusMin = 1+ 10 * density;
+        mRadiusMax = 2+ 20 * density;
     }
 
     public boolean isEmpty() { return mEmpty; }
     
     public void setPenSize(float min, float max) {
-        mRadiusMin = min * 0.5f;
-        mRadiusMax = max * 0.5f;
+        mRadiusMin = min;
+        mRadiusMax = max;
     }
 
     public void recycle() {

@@ -18,7 +18,7 @@
     package="com.interactive.stroke.draw"
     android:versionCode="1"
     android:versionName="0.1-almost" >
- 
+
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="17" />
@@ -37,11 +37,10 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/launcher_icon"
         android:label="@string/app_name"
-        android:largeHeap="true" 
+        android:largeHeap="true"
         android:theme="@style/DrawAppTheme" >
         <activity
             android:name="com.interactive.stroke.draw.DrawActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

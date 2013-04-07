@@ -30,8 +30,6 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
 	    Bundle savedInstanceState) {
 	View view = inflater.inflate(R.layout.dialog_color_picker, container);
 	mColorPicker = (ColorPicker) view.findViewById(R.id.picker);
-	mColorPicker.setOldCenterColor(mOldColor);
-	mColorPicker.setColor(mOldColor);
 	msvBar = (SVBar) view.findViewById(R.id.svbar);
 	mColorPicker.addSVBar(msvBar);
 	mColorPicker.setOnColorChangedListener(this);
@@ -57,7 +55,8 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
 	mOldColor = color;
 	((DrawActivity) getActivity()).setPenColor(color);
 	((DrawActivity) getActivity()).mMasterBucket.setColor(color);
-	((DrawActivity) getActivity()).mColor = color;
+	((DrawActivity) getActivity()).mSlateFragment.mColor = color;
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.interactive.stroke.draw.GestureDetector;
+package com.interactive.stroke.draw.gestures;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
