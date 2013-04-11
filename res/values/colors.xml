@@ -30,4 +30,5 @@
 
     <color name="background_toolbar">#313531</color>
     <color name="app_background">#20201F</color>
+    <color name="default_drawing_color">#353535</color>
 </resources>

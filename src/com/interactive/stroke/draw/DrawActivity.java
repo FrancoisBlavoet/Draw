@@ -7,7 +7,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.PointF;
 import android.net.Uri;
@@ -172,7 +171,8 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    mMasterBucket.setColor(mSlateFragment.mColor);
 	    this.setPenColor(mSlateFragment.mColor);
 	} else {
-	    mSlateFragment.mColor = mPrefs.getInt(PreferenceConstants.PREF_BRUSH_COLOR, Color.RED);
+	    mSlateFragment.mColor = mPrefs.getInt(PreferenceConstants.PREF_BRUSH_COLOR, 
+		    this.getResources().getColor(R.color.default_drawing_color));
 	    mMasterBucket.setColor(mSlateFragment.mColor);
 	    this.setPenColor(mSlateFragment.mColor);
 	}
