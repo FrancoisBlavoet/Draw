@@ -8,10 +8,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
-//import android.graphics.PorterDuffColorFilter;
-//import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffColorFilter;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -70,9 +69,8 @@ public class MasterBucket extends ImageView {
 
     void updateDrawable() {
 	if (mMask != null && mBackground != null) {
-	    LightingColorFilter cf = new LightingColorFilter(mColor, 1);
-	    //PorterDuffColorFilter cf = new PorterDuffColorFilter(mColor,
-		//    Mode.LIGHTEN);
+	    PorterDuffColorFilter cf = new PorterDuffColorFilter(mColor,
+		    						 Mode.MULTIPLY);
 	    Bitmap bm = combineImages(mBackground, mMask, cf);
 	    this.setImageBitmap(bm);
 	}
