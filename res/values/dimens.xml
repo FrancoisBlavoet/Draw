@@ -20,7 +20,6 @@
     <dimen name="title_size">20sp</dimen>
     <dimen name="action_button_width">48dp</dimen>
     <dimen name="action_button_padding_v">4dp</dimen>
-    <dimen name="slidingmenu_offset">120dp</dimen>
     <dimen name="seekbar_width">300dip</dimen>
     <dimen name="action_bar_slider_icon_right_margin">20dip</dimen>
     <dimen name="action_bar_brush_buttons_width">50dip</dimen>
