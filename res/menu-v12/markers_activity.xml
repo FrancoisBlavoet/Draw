@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_back"
         android:icon="@drawable/ic_navigation_back"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_back"/>
     <item
         android:id="@+id/menu_resize"

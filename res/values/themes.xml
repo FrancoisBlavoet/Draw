@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="DrawAppTheme" parent="@style/Theme.Sherlock">
         <item name="android:windowBackground">@color/app_background</item>
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/Widget.Styled.ActionBar</item>
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="@Widget.Sherlock.ActionBar">
         <item name="android:background">@drawable/bg_actionbar</item>
         <item name="windowActionBarOverlay">true</item>
-        <item name="android:titleTextStyle">@style/ActionBar.TitleTextStyle</item>
+        <item name="android:titleTextStyle" tools:ignore="NewApi">@style/ActionBar.TitleTextStyle</item>
         <item name="titleTextStyle">@style/ActionBar.TitleTextStyle</item>
         <item name="android:title">@string/draw_activity_title</item>
-        <item name="android:displayOptions">homeAsUp|showTitle</item>
+        <item name="android:displayOptions" tools:ignore="NewApi">homeAsUp|showTitle</item>
         <item name="displayOptions">homeAsUp|showTitle</item>
 
     </style>

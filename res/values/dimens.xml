@@ -18,19 +18,10 @@
 
     <dimen name="ui_font_size">18sp</dimen>
     <dimen name="title_size">20sp</dimen>
-    <dimen name="default_pen_size_min">4dp</dimen>
-    <dimen name="default_pen_size_max">24dp</dimen>
-    <dimen name="action_bar_height">48dp</dimen>
-    <dimen name="action_bar_logo_width">48dip</dimen>
     <dimen name="action_button_width">48dp</dimen>
     <dimen name="action_button_padding_v">4dp</dimen>
-    <dimen name="tool_palette_gutter">6dp</dimen>
-    <dimen name="shadow_width">15dp</dimen>
     <dimen name="slidingmenu_offset">120dp</dimen>
-    <dimen name="toolbar_width">100dip</dimen>
-    <dimen name="toolbar_color_button_diameter">50dip</dimen>
     <dimen name="seekbar_width">300dip</dimen>
-    <dimen name="seekbar_between">50dip</dimen>
     <dimen name="action_bar_slider_icon_right_margin">20dip</dimen>
     <dimen name="action_bar_brush_buttons_width">50dip</dimen>
     <dimen name="notification_bar_height">25dip</dimen>
