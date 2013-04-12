@@ -1,27 +1,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:theme="@style/DialogColorPicker" >
+
+    <TextView
+        style="@style/DialogColorPicker.Title"
+        android:layout_width="@dimen/color_picker_dialog_width"
+        android:layout_height="@dimen/color_picker_dialog_title_height"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dip"
+        android:singleLine="true"
+        android:text="@string/color_dialog_title" />
+
+    <View
+        android:id="@+id/titleDivider"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@color/color_picker_divider" />
 
     <com.larswerkman.colorpicker.ColorPicker
         android:id="@+id/colorPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        tools:ignore="MissingRegistered" />
 
     <com.larswerkman.colorpicker.SaturationBar
         android:id="@+id/saturationBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="16dip" />
+        android:layout_marginTop="16dip"
+        tools:ignore="MissingRegistered" />
 
     <com.larswerkman.colorpicker.ValueBar
         android:id="@+id/valueBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="16dip" />
+        android:layout_marginBottom="32dip"
+        android:layout_marginTop="16dip"
+        tools:ignore="MissingRegistered,MissingRegistered" />
 
 </LinearLayout>

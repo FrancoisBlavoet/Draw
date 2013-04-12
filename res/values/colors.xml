@@ -16,11 +16,12 @@
 -->
 <resources>
 
-
-    <drawable name="actionbar_button_bg">#00000000</drawable>
-    <drawable name="actionbar_button_pressed_bg">#60FFFFFF</drawable>
-    <drawable name="actionbar_button_selected_bg">#CCFFCC00</drawable>
-
     <color name="app_background">#20201F</color>
     <color name="default_drawing_color">#353535</color>
+    <color name="color_picker_dialog_title_background">#1a1a1a</color>
+    <color name="color_picker_dialog_title">#99beb6</color>
+    <color name="color_picker_dialog_background">#101010</color>
+    <color name="color_picker_divider">#6c9e9b</color>
+    
+
 </resources>

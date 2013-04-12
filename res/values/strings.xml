@@ -28,5 +28,6 @@
     <string name="draw_activity_title">DRAW</string>
     <string name="brush_button">Brush</string>
     <string name="eraser_button">Eraser</string>
+    <string name="color_dialog_title">PICK A COLOR</string>
 
 </resources>

@@ -45,8 +45,7 @@ public class ColorDialogFragment extends SherlockDialogFragment implements OnCol
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setStyle(DialogFragment.STYLE_NO_FRAME, R.style.colorPickerStyle);
-
+	setStyle(DialogFragment.STYLE_NO_FRAME, R.style.DialogColorPicker);
     }
 
     @Override

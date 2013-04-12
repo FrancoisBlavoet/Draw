@@ -16,10 +16,6 @@
 -->
 <resources>
 
-    <dimen name="ui_font_size">18sp</dimen>
-    <dimen name="title_size">20sp</dimen>
-    <dimen name="action_button_width">48dp</dimen>
-    <dimen name="action_button_padding_v">4dp</dimen>
     <dimen name="seekbar_width">300dip</dimen>
     <dimen name="action_bar_slider_icon_right_margin">20dip</dimen>
     <dimen name="action_bar_brush_buttons_width">50dip</dimen>
@@ -27,5 +23,8 @@
     <dimen name="default_drawing_verticalMargin">40dip</dimen>
     <dimen name="default_drawing_horizontalMargin">120dip</dimen>
     <dimen name="default_drawing_distance_from_border">20dip</dimen>
+    <dimen name="color_picker_dialog_title_height">64dip</dimen>
+    <dimen name="color_picker_dialog_width">400dip</dimen>
+    <dimen name="color_picker_dialog_title_text_size">24sp</dimen>
 
 </resources>

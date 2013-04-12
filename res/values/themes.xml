@@ -22,10 +22,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="colorPickerStyle" parent="Theme.Sherlock.Light.Dialog">
-        <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:cacheColorHint">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-    </style>
+
 
 </resources>
