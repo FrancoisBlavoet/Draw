@@ -3,6 +3,7 @@ package com.interactive.stroke.draw;
 
 import com.interactive.stroke.draw.R;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -186,12 +187,21 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
        return super.onCreateOptionsMenu(menu);
     }
     
+    @SuppressLint("NewApi")
     @Override
     public boolean onOptionsItemSelected(
 	    com.actionbarsherlock.view.MenuItem item) {
 	switch (item.getItemId()) {
 	case R.id.menu_back:
-	    clickUndo(null);
+	    //clickUndo(null);
+	    float x = this.mSlateFragment.mSlate.getTranslationX();
+	    float y = this.mSlateFragment.mSlate.getTranslationY();
+	    float r = this.mSlateFragment.mSlate.getRotation();
+	    this.mSlateFragment.mSlate.setRotation(r+90);
+	    //this.mSlateFragment.mSlate.setTranslationX(x-this.mSlateFragment.mSlate.getHeight()/2);getHeight()/2getHeight()/2getHeight()/2
+	    //this.mSlateFragment.mSlate.setTranslationY(y-this.mSlateFragment.mSlate.getWidth()/2);
+	    //setRotationX(float)
+	    //ViewPropertyAnimator	 animate()
 	    break;
 	case R.id.menu_resize :	    
 	    mActionMode = this.startActionMode(mActionModeCallback);
