@@ -157,10 +157,10 @@ public class SlateFragment extends SherlockFragment {
     }
     
     @Override
-    public void onStop() {
-	super.onStop();
+    public void onPause() {
+	super.onPause();
 	slateContainer.removeView(mSlate);
-    }
+    }	
 	
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
