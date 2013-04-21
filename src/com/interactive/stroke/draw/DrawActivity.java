@@ -41,8 +41,8 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     final static int LOAD_IMAGE = 1000;
     private static final String TAG = "Draw";
     private static final boolean DEBUG = false;
-    private  float DENSITY;
-    
+    private float DENSITY;
+
     private SharedPreferences mPrefs;
     
     public MasterBucket mMasterBucket;
@@ -134,7 +134,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 	setContentView(R.layout.main);
 	
-	DENSITY  = getResources().getDisplayMetrics().density;	
+	DENSITY = getResources().getDisplayMetrics().density;
 	mMasterBucket = (MasterBucket) findViewById(R.id.masterBucket);
 	
 	FragmentManager fragmentManager = getSupportFragmentManager();
@@ -192,7 +192,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	case R.id.menu_back:
 	    clickUndo(null);
 	    break;
-	case R.id.menu_resize :	    
+	case R.id.menu_resize:
 	    mActionMode = this.startActionMode(mActionModeCallback);
 	    break;
 	case R.id.menu_clear:
@@ -288,7 +288,9 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     		boolean fromUser) {
 	switch (seekBar.getId()) {
 	case R.id.brush_size_bar :
-	    mSlateFragment.mSlate.setPenSize(0.5f + 0.5f * progress * DENSITY,  2+ progress *DENSITY);
+	case R.id.brush_size_bar:
+	    mSlateFragment.mSlate.setPenSize(0.5f + 0.5f * progress * DENSITY, 
+		    			     0.5f + progress * DENSITY);
 	    break;
 	case R.id.brush_transparency_bar :
 	    mSlateFragment.mSlate.setPenOpacity(255 - progress);
@@ -305,15 +307,33 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     public void onStopTrackingTouch(SeekBar seekBar) {	
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onPause() {
 	super.onPause();
 	mSlateFragment.saveDrawing(PreferenceConstants.WIP_FILENAME, true);
+	
+	// Let's cancel the changes made in order to do not mess up the slate position :
+	if (Math.abs((mSlateFragment.mOrientation - mSlateFragment.mOriginalOrientation) % 180) == 90) {
+	    float r = this.mSlateFragment.mSlate.getRotation();
+	    this.mSlateFragment.mSlate.setRotation(r - 90);
+	    this.mSlateFragment.mSlate.setTranslationX(0);
+	    this.mSlateFragment.mSlate.setTranslationY(0);
+	}
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onResume() {
 	super.onResume();
+	if (Math.abs((mSlateFragment.mOrientation - mSlateFragment.mOriginalOrientation) % 180) == 90) {
+	    int H = this.mSlateFragment.mSlate.getHeight() / 2;
+	    int W = this.mSlateFragment.mSlate.getWidth() / 2;
+	    float r = this.mSlateFragment.mSlate.getRotation();
+	    this.mSlateFragment.mSlate.setRotation(r + 90);
+	    this.mSlateFragment.mSlate.setTranslationX(-W + H);
+	    this.mSlateFragment.mSlate.setTranslationY(-H + W);
+	}
     }
 
     @Override

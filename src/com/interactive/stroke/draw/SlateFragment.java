@@ -91,6 +91,7 @@ public class SlateFragment extends SherlockFragment {
     };
 
     int mOriginalOrientation;
+    int mOrientation;
     int mOriginalHeight;
     int mOriginalWidth;
     
@@ -135,6 +136,10 @@ public class SlateFragment extends SherlockFragment {
 	slateContainer.addView(mSlate, 0, frameParams);
 	setPenType(0); // place holder param until brush choice is added in the new UI
 	setPenColor(mColor);
+	
+	mOrientation = ((WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE))
+		.getDefaultDisplay().getRotation();
+	mOrientation = Rotation.convertToAngleInDegrees(mOrientation);
 	return view;
     }
     
