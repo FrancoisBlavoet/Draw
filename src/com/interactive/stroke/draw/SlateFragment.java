@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.interactive.stroke.draw.utils.PreferenceConstants;
 import com.interactive.stroke.draw.utils.Rotation;
 
 
@@ -93,7 +94,6 @@ public class SlateFragment extends SherlockFragment {
     int mOriginalHeight;
     int mOriginalWidth;
     
-    public static final String WIP_FILENAME = "temporary.png";
     public static final String IMAGE_SAVE_DIRNAME = "Drawings";
     public static final String IMAGE_TEMP_DIRNAME = IMAGE_SAVE_DIRNAME + "/.temporary";
     
@@ -123,7 +123,7 @@ public class SlateFragment extends SherlockFragment {
 	    // TODO the drawing Background will be configurable in the project creation wizard
 	    // Load the old buffer if necessary
 	    if (!mJustLoadedImage) {
-		loadDrawing(WIP_FILENAME, true);
+		loadDrawing(PreferenceConstants.WIP_FILENAME, true);
 	    } else {
 		mJustLoadedImage = false;
 	    }

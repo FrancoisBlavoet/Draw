@@ -41,7 +41,6 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     final static int LOAD_IMAGE = 1000;
     private static final String TAG = "Draw";
     private static final boolean DEBUG = false;
-    public static final String WIP_FILENAME = "unamed project.png";
     private  float DENSITY;
     
     private SharedPreferences mPrefs;
@@ -309,7 +308,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     @Override
     public void onPause() {
 	super.onPause();
-	mSlateFragment.saveDrawing(WIP_FILENAME, true);
+	mSlateFragment.saveDrawing(PreferenceConstants.WIP_FILENAME, true);
     }
 
     @Override
@@ -470,7 +469,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     protected void loadImageFromContentUri(Uri contentUri) {
 	Toast.makeText(this, "Loading from " + contentUri, Toast.LENGTH_SHORT)
 		.show();
-	mSlateFragment.loadDrawing(WIP_FILENAME, true);
+	mSlateFragment.loadDrawing(PreferenceConstants.WIP_FILENAME, true);
 	mSlateFragment.mJustLoadedImage = true;
 
 	try {
