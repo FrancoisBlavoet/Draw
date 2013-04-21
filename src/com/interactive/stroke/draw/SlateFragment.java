@@ -167,12 +167,18 @@ public class SlateFragment extends SherlockFragment {
 	super.onConfigurationChanged(newConfig);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private FrameLayout.LayoutParams getSlateLayout(Pair<Integer, Integer> dimensions) {
 	FrameLayout.LayoutParams frameParams = new FrameLayout.LayoutParams(dimensions.first, dimensions.second);
-	frameParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+	frameParams.gravity = Gravity.TOP | Gravity.LEFT;
 	frameParams.bottomMargin = this.getResources().
 		getDimensionPixelOffset(R.dimen.default_drawing_distance_from_border);
-	frameParams.rightMargin  = frameParams.bottomMargin;
+	TypedValue tv = new TypedValue();
+	getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
+	int actionBarHeight = getResources().getDimensionPixelSize(tv.resourceId);
+	frameParams.topMargin = this.getResources().
+		getDimensionPixelOffset(R.dimen.default_drawing_distance_from_border) + actionBarHeight;
+	frameParams.leftMargin  = this.getResources().getDimensionPixelOffset(R.dimen.toolbar_width);
 	return frameParams;
     }
 
@@ -203,7 +209,7 @@ public class SlateFragment extends SherlockFragment {
 		- actionBarHeight
 		- this.getResources().getDimensionPixelOffset(R.dimen.default_drawing_verticalMargin);
 	mOriginalWidth = mOriginalWidth 
-		- this.getResources().getDimensionPixelOffset(R.dimen.default_drawing_horizontalMargin);
+		- 2 * this.getResources().getDimensionPixelOffset(R.dimen.toolbar_width);
     }
     
     private Pair<Integer, Integer> getSlateDimensionsAfterRotation() {

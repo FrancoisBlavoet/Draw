@@ -26,5 +26,6 @@
     <dimen name="color_picker_dialog_title_height">64dip</dimen>
     <dimen name="color_picker_dialog_width">400dip</dimen>
     <dimen name="color_picker_dialog_title_text_size">24sp</dimen>
-
+	<dimen name="toolbar_width">100dp</dimen>
+    
 </resources>
