@@ -288,7 +288,6 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     		boolean fromUser) {
 	switch (seekBar.getId()) {
 	case R.id.brush_size_bar :
-	case R.id.brush_size_bar:
 	    mSlateFragment.mSlate.setPenSize(0.5f + 0.5f * progress * DENSITY, 
 		    			     0.5f + progress * DENSITY);
 	    break;
