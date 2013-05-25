@@ -375,10 +375,15 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    Log.d(TAG, "starting with intent=" + startIntent + " extras="
 		    + dumpBundle(startIntent.getExtras()));
 	String a = startIntent.getAction();
+        if (a == null){
+            return;
+        }
 	if (a.equals(Intent.ACTION_EDIT)) {
 	    // XXX: what happens to the old drawing? we should really move to
 	    // auto-save
-	    mSlateFragment.mSlate.clear();
+        if (mSlateFragment!=null && mSlateFragment.mSlate!= null) {
+	        mSlateFragment.mSlate.clear();
+        }
 	    loadImageFromIntent(startIntent);
 	} else if (a.equals(Intent.ACTION_SEND)) {
 	    // XXX: what happens to the old drawing? we should really move to
@@ -392,7 +397,9 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     @Override
     protected void onSaveInstanceState(Bundle icicle) {
 	super.onSaveInstanceState(icicle);
-	icicle.putInt(PreferenceConstants.PREF_BRUSH_COLOR, mSlateFragment.mColor);	
+	icicle.putInt(PreferenceConstants.PREF_BRUSH_COLOR, mSlateFragment.mColor);
+    icicle.putInt(PreferenceConstants.PREF_BRUSH_SIZE, mBrushSizeBar.getProgress() );
+    icicle.putInt(PreferenceConstants.PREF_BRUSH_TRANSPARENCY, mBrushTransparencyBar.getProgress());
     }
 
     @Override
@@ -452,7 +459,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
         mSlateFragment.mSlate.setDebugFlags(debugMode
             ? Slate.FLAG_DEBUG_EVERYTHING
             : 0);
-        mDebugButton.setSelected(debugMode);
+        //mDebugButton.setSelected(debugMode);
         Toast.makeText(this, "Debug mode " + ((mSlateFragment.mSlate.getDebugFlags() == 0) ? "off" : "on"),
             Toast.LENGTH_SHORT).show();
     }
