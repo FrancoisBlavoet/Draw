@@ -64,7 +64,6 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     private RotationGestureDetector mRotateDetector;
     private TranslationGestureDetector mTranslationDetector;
 
-    private View mDebugButton;
 
     @SuppressWarnings("unused")
     private ActionMode mActionMode;
@@ -126,55 +125,64 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 
     @Override
     public void onCreate(Bundle icicle) {
-	super.onCreate(icicle);
-	
-	WindowManager.LayoutParams lp = getWindow().getAttributes();
-	lp.format = PixelFormat.RGBA_8888;
-	getWindow().setAttributes(lp);
-	requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-	setContentView(R.layout.main);
-	
-	DENSITY = getResources().getDisplayMetrics().density;
-	mMasterBucket = (MasterBucket) findViewById(R.id.masterBucket);
-	
-	FragmentManager fragmentManager = getSupportFragmentManager();
-	mSlateFragment = (SlateFragment)  fragmentManager.findFragmentById(R.id.slate_fragment);
+        super.onCreate(icicle);
 
-	ActionBar actionBar = this.getSupportActionBar();
-	View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_cv, null);
-	actionBar.setCustomView(mActionBarView);	
-	actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-		| ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
-	actionBar.setTitle(this.getString(R.string.draw_activity_title));
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.format = PixelFormat.RGBA_8888;
+        getWindow().setAttributes(lp);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        setContentView(R.layout.main);
 
-	mBrushSizeBar = (SeekBar) findViewById(R.id.brush_size_bar);
-	mBrushSizeBar.setProgress(10);
-	mBrushSizeBar.setOnSeekBarChangeListener(this);
-	
-	mBrushTransparencyBar = (SeekBar) findViewById(R.id.brush_transparency_bar);
-	mBrushTransparencyBar.setOnSeekBarChangeListener(this);
-	mBrushTransparencyBar.setProgress(0);
-	
-	mBrushButton = (ImageButton) findViewById(R.id.brush_button);
-	mBrushButton.setSelected(true);
-	mEraserButton = (ImageButton) findViewById(R.id.eraser_button);	
+        DENSITY = getResources().getDisplayMetrics().density;
+        mMasterBucket = (MasterBucket) findViewById(R.id.masterBucket);
 
-	mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
-	mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
-	mTranslationDetector = new TranslationGestureDetector(getApplicationContext(), new MoveListener());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mSlateFragment = (SlateFragment)  fragmentManager.findFragmentById(R.id.slate_fragment);
 
-	mPrefs = getPreferences(MODE_PRIVATE);
-	
-	if (icicle != null) {
-	    mSlateFragment.mColor = icicle.getInt(PreferenceConstants.PREF_BRUSH_COLOR);
-	    mMasterBucket.setColor(mSlateFragment.mColor);
-	    this.setPenColor(mSlateFragment.mColor);
-	} else {
-	    mSlateFragment.mColor = mPrefs.getInt(PreferenceConstants.PREF_BRUSH_COLOR, 
-		    this.getResources().getColor(R.color.default_drawing_color));
-	    mMasterBucket.setColor(mSlateFragment.mColor);
-	    this.setPenColor(mSlateFragment.mColor);
-	}
+        ActionBar actionBar = this.getSupportActionBar();
+        View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_cv, null);
+        actionBar.setCustomView(mActionBarView);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
+            | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+        actionBar.setTitle(this.getString(R.string.draw_activity_title));
+
+        mBrushSizeBar = (SeekBar) findViewById(R.id.brush_size_bar);
+        if (icicle == null) {
+            mBrushSizeBar.setProgress(10);
+        } else {
+            mBrushSizeBar.setProgress(icicle.getInt(PreferenceConstants.PREF_BRUSH_SIZE));
+        }
+        mBrushSizeBar.setOnSeekBarChangeListener(this);
+
+
+        mBrushTransparencyBar = (SeekBar) findViewById(R.id.brush_transparency_bar);
+        mBrushTransparencyBar.setOnSeekBarChangeListener(this);
+        if (icicle == null) {
+            mBrushTransparencyBar.setProgress(0);
+        } else {
+            mBrushTransparencyBar.setProgress(icicle.getInt(PreferenceConstants.PREF_BRUSH_TRANSPARENCY));
+        }
+
+        mBrushButton = (ImageButton) findViewById(R.id.brush_button);
+        mBrushButton.setSelected(true);
+        mEraserButton = (ImageButton) findViewById(R.id.eraser_button);
+
+        mScaleDetector = new ScaleGestureDetector(getApplicationContext(), new ScaleListener());
+        mRotateDetector = new RotationGestureDetector(getApplicationContext(), new RotateListener());
+        mTranslationDetector = new TranslationGestureDetector(getApplicationContext(), new MoveListener());
+
+        mPrefs = getPreferences(MODE_PRIVATE);
+
+        if (icicle != null) {
+            mSlateFragment.mColor = icicle.getInt(PreferenceConstants.PREF_BRUSH_COLOR);
+            mMasterBucket.setColor(mSlateFragment.mColor);
+            this.setPenColor(mSlateFragment.mColor);
+        } else {
+            mSlateFragment.mColor = mPrefs.getInt(PreferenceConstants.PREF_BRUSH_COLOR,
+                this.getResources().getColor(R.color.default_drawing_color));
+            mMasterBucket.setColor(mSlateFragment.mColor);
+            this.setPenColor(mSlateFragment.mColor);
+        }
     }
     
    
