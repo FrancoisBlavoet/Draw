@@ -1,0 +1,7 @@
+out/
+gen/
+.classpath
+.project
+local.properties
+.idea/workspace.xml
+.idea/vcs.xml

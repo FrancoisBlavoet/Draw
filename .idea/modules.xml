@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../ActionBarSherlock/library/ActionBarSherlock.iml" filepath="$PROJECT_DIR$/../ActionBarSherlock/library/ActionBarSherlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Draw.iml" filepath="$PROJECT_DIR$/Draw.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../HoloColorPicker/HoloColorPicker.iml" filepath="$PROJECT_DIR$/../HoloColorPicker/HoloColorPicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../HoloColorPicker-Master/HoloColorPicker-Master.iml" filepath="$PROJECT_DIR$/../HoloColorPicker-Master/HoloColorPicker-Master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../Android Workspace/gridlayout_v7/gridlayout_v7.iml" filepath="$PROJECT_DIR$/../../Android Workspace/gridlayout_v7/gridlayout_v7.iml" />
+    </modules>
+  </component>
+</project>
+
