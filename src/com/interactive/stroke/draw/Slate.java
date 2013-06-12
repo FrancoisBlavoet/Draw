@@ -43,8 +43,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.interactive.stroke.draw.R;
-
 public class Slate extends View {
 
     static final boolean DEBUG = false;
@@ -396,7 +394,7 @@ public class Slate extends View {
         }
     }
 
-    private MarkersPlotter[] mStrokes;
+    private MarkersPlotter mStroke;
 
     Spot mTmpSpot = new Spot();
     
@@ -452,12 +450,8 @@ public class Slate extends View {
         if (mFountainPenBits == null) { Log.e(TAG, "SmoothStroker: Couldn't load fountainpen bitmap"); }
         mFountainPenBitsFrame = new Rect(0, 0, mFountainPenBits.getWidth(), mFountainPenBits.getHeight());
 
-        // set up individual strokers for each pointer
-        mStrokes = new MarkersPlotter[MAX_POINTERS]; // TODO: don't bother unless hasSystemFeature(MULTITOUCH_DISTINCT)
-        for (int i=0; i<mStrokes.length; i++) {
-            mStrokes[i] = new MarkersPlotter();
-        }
-        
+        mStroke = new MarkersPlotter();
+
         mPressureCooker = new PressureCooker(getContext());
 
         setFocusable(true);
@@ -543,7 +537,7 @@ public class Slate extends View {
         
         if (mStrokeDebugGraph == null) {
             final int width = c.getWidth() - 128;
-            final int height = ROW_HEIGHT * mStrokes.length + 2 * ROW_MARGIN;
+            final int height = ROW_HEIGHT + 2 * ROW_MARGIN;
             mStrokeDebugGraph = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             if (mStrokeDebugGraph == null) {
                 throw new RuntimeException("drawStrokeDebugInfo: couldn't create debug bitmap (" + width + "x" + height + ")");
@@ -559,41 +553,41 @@ public class Slate extends View {
         
         int left = 4;
         int bottom = graph.getHeight() - ROW_MARGIN;
-        final int STEP = 4; 
-        for (MarkersPlotter st : mStrokes) {
-            float r = st.getLastPressure();
-            
-            if (r >= FIRM_PRESSURE_LOW && r <= FIRM_PRESSURE_HIGH) 
-                mGraphPaint1.setColor(0xFF33FF33);
-            else if (r < FIRM_PRESSURE_LOW)
-                mGraphPaint1.setColor(0xFF808080);
-            else
-                mGraphPaint1.setColor(0xFFFF8000);
+        final int STEP = 4;
 
-            String s = (r < 0) ? "--" : String.format("%s %.4f",
-                    ((st.getLastTool() == MotionEvent.TOOL_TYPE_STYLUS) ? "S" : "F"),
-                    r);
-            
-            graph.drawText(s, left, bottom - 2, mGraphPaint1);
-            
-            if (mGraphX + COLUMN_WIDTH > graph.getWidth()) {
-                mGraphX = 0;
-                graph.save();
-                graph.clipRect(new Rect(30, 0, graph.getWidth(), graph.getHeight()));
-                graph.drawColor(0, PorterDuff.Mode.CLEAR);
-                graph.restore();
-            }
-            
-            if (r >= 0) {
-                int barsize = (int)(r * ROW_HEIGHT);
-                graph.drawRect(mGraphX + COLUMN_WIDTH, bottom - barsize, 
-                        mGraphX + COLUMN_WIDTH + STEP, bottom, mGraphPaint1);
-            } else {
-                graph.drawPoint(mGraphX + COLUMN_WIDTH + STEP, bottom, mGraphPaint1);
-            }
-            bottom -= (ROW_HEIGHT + ROW_MARGIN);
+        float r = mStroke.getLastPressure();
+
+        if (r >= FIRM_PRESSURE_LOW && r <= FIRM_PRESSURE_HIGH)
+            mGraphPaint1.setColor(0xFF33FF33);
+        else if (r < FIRM_PRESSURE_LOW)
+            mGraphPaint1.setColor(0xFF808080);
+        else
+            mGraphPaint1.setColor(0xFFFF8000);
+
+        String s = (r < 0) ? "--" : String.format("%s %.4f",
+                ((mStroke.getLastTool() == MotionEvent.TOOL_TYPE_STYLUS) ? "S" : "F"),
+                r);
+
+        graph.drawText(s, left, bottom - 2, mGraphPaint1);
+
+        if (mGraphX + COLUMN_WIDTH > graph.getWidth()) {
+            mGraphX = 0;
+            graph.save();
+            graph.clipRect(new Rect(30, 0, graph.getWidth(), graph.getHeight()));
+            graph.drawColor(0, PorterDuff.Mode.CLEAR);
+            graph.restore();
         }
-        
+
+        if (r >= 0) {
+            int barsize = (int)(r * ROW_HEIGHT);
+            graph.drawRect(mGraphX + COLUMN_WIDTH, bottom - barsize,
+                    mGraphX + COLUMN_WIDTH + STEP, bottom, mGraphPaint1);
+        } else {
+            graph.drawPoint(mGraphX + COLUMN_WIDTH + STEP, bottom, mGraphPaint1);
+        }
+        bottom -= (ROW_HEIGHT + ROW_MARGIN);
+
+
         mGraphX += STEP;
         
         final int x = 96;
@@ -693,21 +687,15 @@ public class Slate extends View {
     }
 
     public void setPenColor(int color) {
-        for (MarkersPlotter plotter : mStrokes) {
-            plotter.setPenColor(color);
-        }
+        mStroke.setPenColor(color);
     }
     
     public void setPenType(int shape) {
-        for (MarkersPlotter plotter : mStrokes) {
-            plotter.setPenType(shape);
-        }
+        mStroke.setPenType(shape);
     }
     
     public void setPenOpacity(int opacity) {
-        for (MarkersPlotter plotter : mStrokes) {
-            plotter.setPenOpacity(opacity);
-        }
+        mStroke.setPenOpacity(opacity);
     }
      
     @Override
@@ -759,14 +747,14 @@ public class Slate extends View {
 
     
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    final static int getToolTypeCompat(MotionEvent me, int index) {
+    final static int getToolTypeCompat(MotionEvent me) {
         if (hasToolType()) {
-            return me.getToolType(index);
+            return me.getToolType(0);
         }
         
         // dirty hack for the HTC Flyer
         if ("flyer".equals(Build.HARDWARE)) {
-            if (me.getSize(index) <= 0.1f) {
+            if (me.getSize(0) <= 0.1f) {
                 // with very high probability this is the stylus
                 return MotionEvent.TOOL_TYPE_STYLUS;
             }
@@ -775,18 +763,21 @@ public class Slate extends View {
         return MotionEvent.TOOL_TYPE_FINGER;
     }
 
-      
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-	
-	int action = event.getActionMasked();
+
+        int action = event.getActionMasked();
         int N = event.getHistorySize();
-        int P = event.getPointerCount();
+
         long time = event.getEventTime();
+        if (event.getPointerCount() > 1) {
+            mStroke.finish(time);
+            return false;
+        }
 
         mEmpty = false;
-        
+
 
         // starting a new touch? commit the previous state of the canvas
         if (action == MotionEvent.ACTION_DOWN) {
@@ -794,67 +785,64 @@ public class Slate extends View {
         }
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN
-        		|| action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
-            int j = event.getActionIndex();
-            
-        	mTmpSpot.update(
-        	        event.getX(j),
-        			event.getY(j),
-        			event.getSize(j),
-        			event.getPressure(j) + event.getSize(j),
-        			time,
-        			getToolTypeCompat(event, j)
-        			);
-            mStrokes[event.getPointerId(j)].add(mTmpSpot);
-        	if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
-	            mStrokes[event.getPointerId(j)].finish(time);
-        	}
+                || action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+
+            mTmpSpot.update(
+                    event.getX(),
+                    event.getY(),
+                    event.getSize(),
+                    event.getPressure() + event.getSize(),
+                    time,
+                    getToolTypeCompat(event)
+            );
+            mStroke.add(mTmpSpot);
+            if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP) {
+                mStroke.finish(time);
+            }
         } else if (action == MotionEvent.ACTION_MOVE) {
             if (dbgX >= 0) {
-                dbgRect.set(dbgX-1,dbgY-1,dbgX+1,dbgY+1);
+                dbgRect.set(dbgX - 1, dbgY - 1, dbgX + 1, dbgY + 1);
             }
 
             for (int i = 0; i < N; i++) {
-                for (int j = 0; j < P; j++) {
-                	mTmpSpot.update(
-                			event.getHistoricalX(j, i),
-                			event.getHistoricalY(j, i),
-                			event.getHistoricalSize(j, i),
-                			event.getHistoricalPressure(j, i)
-                                + event.getHistoricalSize(j, i),
-                			event.getHistoricalEventTime(i),
-                            getToolTypeCompat(event, j)
-                			);
-                    if ((mDebugFlags & FLAG_DEBUG_STROKES) != 0) {
-                        if (dbgX >= 0) {
-                            //mTiledCanvas.drawLine(dbgX, dbgY, mTmpSpot.x, mTmpSpot.y, mDebugPaints[3]);
-                        }
-                        dbgX = mTmpSpot.x;
-                        dbgY = mTmpSpot.y;
-                        dbgRect.union(dbgX-1, dbgY-1, dbgX+1, dbgY+1);
-                    }
-                    mStrokes[event.getPointerId(j)].add(mTmpSpot);
-                }
-            }
-            for (int j = 0; j < P; j++) {
-            	mTmpSpot.update(
-            			event.getX(j),
-            			event.getY(j),
-            			event.getSize(j),
-            			event.getPressure(j) + event.getSize(j),
-            			time,
-                        getToolTypeCompat(event, j)
-           			);
+                mTmpSpot.update(
+                        event.getHistoricalX(0, i),
+                        event.getHistoricalY(0, i),
+                        event.getHistoricalSize(0, i),
+                        event.getHistoricalPressure(0, i)
+                                + event.getHistoricalSize(0, i),
+                        event.getHistoricalEventTime(i),
+                        getToolTypeCompat(event)
+                );
                 if ((mDebugFlags & FLAG_DEBUG_STROKES) != 0) {
                     if (dbgX >= 0) {
                         //mTiledCanvas.drawLine(dbgX, dbgY, mTmpSpot.x, mTmpSpot.y, mDebugPaints[3]);
                     }
                     dbgX = mTmpSpot.x;
                     dbgY = mTmpSpot.y;
-                    dbgRect.union(dbgX-1, dbgY-1, dbgX+1, dbgY+1);
+                    dbgRect.union(dbgX - 1, dbgY - 1, dbgX + 1, dbgY + 1);
                 }
-                mStrokes[event.getPointerId(j)].add(mTmpSpot);
+                mStroke.add(mTmpSpot);
             }
+
+            mTmpSpot.update(
+                    event.getX(0),
+                    event.getY(0),
+                    event.getSize(0),
+                    event.getPressure(0) + event.getSize(0),
+                    time,
+                    getToolTypeCompat(event)
+            );
+            if ((mDebugFlags & FLAG_DEBUG_STROKES) != 0) {
+                if (dbgX >= 0) {
+                    //mTiledCanvas.drawLine(dbgX, dbgY, mTmpSpot.x, mTmpSpot.y, mDebugPaints[3]);
+                }
+                dbgX = mTmpSpot.x;
+                dbgY = mTmpSpot.y;
+                dbgRect.union(dbgX - 1, dbgY - 1, dbgX + 1, dbgY + 1);
+            }
+            mStroke.add(mTmpSpot);
+
 
             if ((mDebugFlags & FLAG_DEBUG_STROKES) != 0) {
                 Rect dirty = new Rect();
@@ -862,11 +850,9 @@ public class Slate extends View {
                 invalidate(dirty);
             }
         }
-        
+
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-            for (int j = 0; j < P; j++) {
-                mStrokes[event.getPointerId(j)].finish(time);
-            }
+            mStroke.finish(time);
             dbgX = dbgY = -1;
         }
         return true;
