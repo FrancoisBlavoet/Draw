@@ -27,7 +27,6 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.Window;
@@ -57,71 +56,11 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     private float mScaleFactor = 1.f;
     private float mRotationDegrees = 0.f;
     private float mTranslationX = 0.f;
-    private float mTranslationY = 0.f;  
-    private boolean mIsSlateInTiltMode = false;
+    private float mTranslationY = 0.f;
 
     private ScaleGestureDetector mScaleDetector;
     private RotationGestureDetector mRotateDetector;
     private TranslationGestureDetector mTranslationDetector;
-
-
-    @SuppressWarnings("unused")
-    private ActionMode mActionMode;
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-	/*
-	 * Called when the action mode is created; startActionMode() was called
-	 * @see com.actionbarsherlock.view.ActionMode.Callback#onCreateActionMode(com.actionbarsherlock.view.ActionMode, com.actionbarsherlock.view.Menu)
-	 */
-	@Override
-	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-	    // Inflate a menu resource providing context menu items
-	    MenuInflater inflater = mode.getMenuInflater();
-	    inflater.inflate(R.menu.markers_activity_cab, menu);
-	    mIsSlateInTiltMode = true;	    
-	    return true;
-	}
-	
-	/*
-	 * Called each time the action mode is shown. Always called after onCreateActionMode, but
-	 * may be called multiple times if the mode is invalidated.
-	 * @see com.actionbarsherlock.view.ActionMode.Callback#onPrepareActionMode(com.actionbarsherlock.view.ActionMode, com.actionbarsherlock.view.Menu)
-	 */
-	@Override
-	public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-	    return false; // Return false if nothing is done
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@Override
-	public boolean onActionItemClicked(ActionMode mode,
-		com.actionbarsherlock.view.MenuItem item) {
-	    switch (item.getItemId()) {
-	    case R.id.menu_cab_reset:
-		mScaleFactor = 1.f;
-		mSlateFragment.mSlate.setScaleX(mScaleFactor);
-		mSlateFragment.mSlate.setScaleY(mScaleFactor);
-		mRotationDegrees = 0.f;
-		mSlateFragment.mSlate.setRotation(mRotationDegrees);
-		mTranslationX = 0.f;
-		mTranslationY = 0.f;
-		mSlateFragment.mSlate.setTranslationX(mTranslationX);
-		mSlateFragment.mSlate.setTranslationY(mTranslationY);
-		mIsSlateInTiltMode = false;
-		// Action picked, so close the CAB
-		mode.finish(); 
-		return true;
-	    default:
-		return false;
-	    }
-	}
-	
-	@Override
-	public void onDestroyActionMode(ActionMode mode) {
-	    mActionMode = null;
-	    mIsSlateInTiltMode = false;
-	}
-
-    };
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -201,7 +140,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    clickUndo(null);
 	    break;
 	case R.id.menu_resize:
-	    mActionMode = this.startActionMode(mActionModeCallback);
+        resetSlatePosition();
 	    break;
 	case R.id.menu_clear:
 	    clickClear();
@@ -212,23 +151,35 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	}
 	return true;
     }
-    
+
+    private void resetSlatePosition() {
+        mScaleFactor = 1.f;
+        mSlateFragment.mSlate.setScaleX(mScaleFactor);
+        mSlateFragment.mSlate.setScaleY(mScaleFactor);
+        mRotationDegrees = 0.f;
+        mSlateFragment.mSlate.setRotation(mRotationDegrees);
+        mTranslationX = 0.f;
+        mTranslationY = 0.f;
+        mSlateFragment.mSlate.setTranslationX(mTranslationX);
+        mSlateFragment.mSlate.setTranslationY(mTranslationY);
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-	if (!mIsSlateInTiltMode) {
-	    return super.dispatchTouchEvent(event);
-	}
 
-	for (int i = 0; i < event.getPointerCount(); i++) {
-	    if (event.getY(i) < this.getSupportActionBar().getHeight() + 
-		    getResources().getDimension(R.dimen.notification_bar_height)) {
-		return super.dispatchTouchEvent(event);
-	    }    
-	}
-	mRotateDetector.onTouchEvent(event);
-	mScaleDetector.onTouchEvent(event);
-	mTranslationDetector.onTouchEvent(event);
-	return true;
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            if (event.getY(i) < this.getSupportActionBar().getHeight() +
+                    getResources().getDimension(R.dimen.notification_bar_height)) {
+                return super.dispatchTouchEvent(event);
+            }
+        }
+        if (event.getPointerCount() > 1) {
+            mRotateDetector.onTouchEvent(event);
+            mScaleDetector.onTouchEvent(event);
+            //mTranslationDetector.onTouchEvent(event);
+            return true;
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
