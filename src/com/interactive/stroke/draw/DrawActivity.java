@@ -33,6 +33,7 @@ import com.actionbarsherlock.view.Window;
 
 import com.interactive.stroke.draw.gestures.TranslationGestureDetector;
 import com.interactive.stroke.draw.gestures.RotationGestureDetector;
+import com.interactive.stroke.draw.utils.BrushSizeHandler;
 import com.interactive.stroke.draw.utils.PreferenceConstants;
 
 public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBarChangeListener{    
@@ -247,8 +248,10 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     		boolean fromUser) {
 	switch (seekBar.getId()) {
 	case R.id.brush_size_bar :
-	    mSlateFragment.mSlate.setPenSize(0.5f + 0.5f * progress * DENSITY, 
-		    			     0.5f + progress * DENSITY);
+		float size = BrushSizeHandler.calculate(progress);
+		System.out.println(size  + " : " + progress);
+	    mSlateFragment.mSlate.setPenSize(0.5f + (size * DENSITY), 
+	    		size * DENSITY);
 	    break;
 	case R.id.brush_transparency_bar :
 	    mSlateFragment.mSlate.setPenOpacity(255 - progress);
