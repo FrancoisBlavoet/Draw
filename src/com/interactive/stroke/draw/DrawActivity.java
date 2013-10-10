@@ -65,14 +65,14 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
+        DENSITY = getResources().getDisplayMetrics().density;
         WindowManager.LayoutParams lp = getWindow().getAttributes();
         lp.format = PixelFormat.RGBA_8888;
         getWindow().setAttributes(lp);
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.main);
 
-        DENSITY = getResources().getDisplayMetrics().density;
+
         mMasterBucket = (MasterBucket) findViewById(R.id.masterBucket);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,11 +86,14 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
         actionBar.setTitle(this.getString(R.string.draw_activity_title));
 
         mBrushSizeBar = (SeekBar) findViewById(R.id.brush_size_bar);
-        if (icicle == null) {
-            mBrushSizeBar.setProgress(10);
-        } else {
-            mBrushSizeBar.setProgress(icicle.getInt(PreferenceConstants.PREF_BRUSH_SIZE));
+        int startBrushSliderPosition = 10;
+        if (icicle != null) {
+            startBrushSliderPosition = icicle.getInt(PreferenceConstants.PREF_BRUSH_SIZE);
         }
+        mBrushSizeBar.setProgress(startBrushSliderPosition);
+        mSlateFragment.mSlate.setPenSize(SliderInterpolator.getBrushSizeMin(startBrushSliderPosition, DENSITY),
+                SliderInterpolator.getBrushSizeMax(startBrushSliderPosition, DENSITY));
+
         mBrushSizeBar.setOnSeekBarChangeListener(this);
 
 
@@ -241,22 +244,21 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    return true;
 	}
     }
-    
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress,
-    		boolean fromUser) {
-	switch (seekBar.getId()) {
-	case R.id.brush_size_bar :
-	    mSlateFragment.mSlate.setPenSize(0.5f + 0.5f * progress * DENSITY, 
-		    			     0.5f + progress * DENSITY);
-	    break;
-	case R.id.brush_transparency_bar :
-	    mSlateFragment.mSlate.setPenOpacity(255 - progress);
-	    break;
-	}
+                                  boolean fromUser) {
+        switch (seekBar.getId()) {
+            case R.id.brush_size_bar:
+                mSlateFragment.mSlate.setPenSize(SliderInterpolator.getBrushSizeMin(progress, DENSITY),
+                                                 SliderInterpolator.getBrushSizeMax(progress, DENSITY));
+                break;
+            case R.id.brush_transparency_bar:
+                mSlateFragment.mSlate.setPenOpacity(255 - progress);
+                break;
+        }
     }
 
-    
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {	
     }
@@ -342,7 +344,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    mSlateFragment.mSlate.clear();
 	    loadImageFromContentUri((Uri) startIntent
 		    .getParcelableExtra(Intent.EXTRA_STREAM));
-	}	
+	}
     }
 
     @Override

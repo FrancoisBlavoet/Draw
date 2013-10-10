@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="holocolorpicker">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../HoloColorPicker/bin/holocolorpicker.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
