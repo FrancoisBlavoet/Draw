@@ -2,12 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
-    <excludeFromCompile>
-      <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/../../Android Workspace/gridlayout_v7/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/../ActionBarSherlock/library/gen" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/../HoloColorPicker/gen" includeSubdirectories="true" />
-    </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
       <entry name="!?*.java" />

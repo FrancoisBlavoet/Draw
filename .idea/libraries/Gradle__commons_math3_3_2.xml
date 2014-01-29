@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="commons-math3-3.2">
+  <library name="Gradle: commons-math3-3.2">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/draw/libs/commons-math3-3.2.jar!/" />
     </CLASSES>

@@ -601,7 +601,7 @@ public class Slate extends View {
         if (mTiledCanvas == null) {
             final Throwable e = new Throwable();
             e.fillInStackTrace();
-            Log.v(TAG, "commitStroke before mTiledCanvas inited", e);
+            Log.v(TAG, "commitStroke before mTiledCanvas initiated", e);
             return;
         }
         mTiledCanvas.commit();
@@ -609,7 +609,7 @@ public class Slate extends View {
 
     public void undo() {
         if (mTiledCanvas == null) {
-            Log.v(TAG, "undo before mTiledCanvas inited");
+            Log.v(TAG, "undo before mTiledCanvas initiated");
         }
         mTiledCanvas.step(-1);
 
