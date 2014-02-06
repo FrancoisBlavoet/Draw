@@ -5,3 +5,4 @@ local.properties
 .idea/vcs.xml
 draw/build/
 import-summary.txt
+.gradle/
