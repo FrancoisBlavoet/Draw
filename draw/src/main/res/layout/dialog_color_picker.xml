@@ -20,14 +20,14 @@
         android:layout_height="2dip"
         android:background="@color/color_picker_divider" />
 
-    <com.larswerkman.colorpicker.ColorPicker
+    <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/colorPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         tools:ignore="MissingRegistered" />
 
-    <com.larswerkman.colorpicker.SaturationBar
+    <com.larswerkman.holocolorpicker.SaturationBar
         android:id="@+id/saturationBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_marginTop="16dip"
         tools:ignore="MissingRegistered" />
 
-    <com.larswerkman.colorpicker.ValueBar
+    <com.larswerkman.holocolorpicker.ValueBar
         android:id="@+id/valueBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

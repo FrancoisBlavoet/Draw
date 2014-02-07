@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.larswerkman.colorpicker.ColorPicker;
-import com.larswerkman.colorpicker.ColorPicker.OnColorChangedListener;
-import com.larswerkman.colorpicker.SaturationBar;
-import com.larswerkman.colorpicker.ValueBar;
+import com.larswerkman.holocolorpicker.ColorPicker;
+import com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener;
+import com.larswerkman.holocolorpicker.SaturationBar;
+import com.larswerkman.holocolorpicker.ValueBar;
 
 public class ColorDialogFragment extends SherlockDialogFragment implements OnColorChangedListener {
 
