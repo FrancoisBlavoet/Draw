@@ -1,7 +1,6 @@
 package com.interactive.stroke.draw;
 
 
-import com.interactive.stroke.draw.R;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -40,6 +39,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     final static int LOAD_IMAGE = 1000;
     private static final String TAG = "Draw";
     private static final boolean DEBUG = false;
+    private static final long NS_PER_MS = 1000000;
     private float DENSITY;
 
     private SharedPreferences mPrefs;
@@ -131,7 +131,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
        MenuInflater inflater = getSupportMenuInflater();
-       inflater.inflate(R.menu.markers_activity, (Menu) menu);
+       inflater.inflate(R.menu.markers_activity, menu);
        return super.onCreateOptionsMenu(menu);
     }
     
@@ -166,7 +166,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
         mSlateFragment.mSlate.setTranslationX(mTranslationX);
         mSlateFragment.mSlate.setTranslationY(mTranslationY);
     }
-
+    private boolean mIsAGestureOngoing = false;
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
 
@@ -176,10 +176,30 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
                 return super.dispatchTouchEvent(event);
             }
         }
+        int actionMasked = event.getActionMasked();
         if (event.getPointerCount() > 1) {
+            if (!mIsAGestureOngoing) {
+                mIsAGestureOngoing = true;
+                mSlateFragment.mSlate.finishStroke(event.getEventTime());
+                // decide if we need to cancel the ongoing stroke :
+                if (((System.nanoTime() / NS_PER_MS) - event.getDownTime() < 500)) {
+                    mSlateFragment.mSlate.undo();
+                }
+
+            }
+
             mRotateDetector.onTouchEvent(event);
             mScaleDetector.onTouchEvent(event);
             //mTranslationDetector.onTouchEvent(event);
+            if (actionMasked == MotionEvent.ACTION_CANCEL || actionMasked == MotionEvent.ACTION_UP) {
+                mIsAGestureOngoing = false;
+            }
+            return true;
+        }
+        if (actionMasked == MotionEvent.ACTION_CANCEL || actionMasked == MotionEvent.ACTION_UP) {
+            mIsAGestureOngoing = false;
+        }
+        if (mIsAGestureOngoing) {
             return true;
         }
         return super.dispatchTouchEvent(event);

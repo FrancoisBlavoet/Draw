@@ -763,6 +763,12 @@ public class Slate extends View {
         return MotionEvent.TOOL_TYPE_FINGER;
     }
 
+    public void finishStroke (long time) {
+        if (mStroke !=null) {
+            mStroke.finish(time);
+        }
+        commitStroke();
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
