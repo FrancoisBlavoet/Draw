@@ -74,7 +74,6 @@
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
     <orderEntry type="library" exported="" name="commons-math3-3.2" level="project" />
     <orderEntry type="module" module-name="holoColorPicker" exported="" />
-    <orderEntry type="module" module-name="actionBarSherlock" exported="" />
   </component>
 </module>
 

@@ -22,7 +22,7 @@
         <item name="android:textSize">@dimen/color_picker_dialog_title_text_size</item>
     </style>
 
-    <style name="DialogColorPicker" parent="Theme.Sherlock.Light.Dialog">
+    <style name="DialogColorPicker" parent="@android:style/Theme.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:background">@color/color_picker_dialog_background</item>
         <item name="android:cacheColorHint">@color/app_background</item>

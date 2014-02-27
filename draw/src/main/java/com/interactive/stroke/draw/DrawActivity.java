@@ -3,6 +3,9 @@ package com.interactive.stroke.draw;
 
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,29 +15,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.Window;
-
 import com.interactive.stroke.draw.gestures.TranslationGestureDetector;
 import com.interactive.stroke.draw.gestures.RotationGestureDetector;
 import com.interactive.stroke.draw.utils.PreferenceConstants;
 
-public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBarChangeListener{    
+public class DrawActivity extends Activity implements OnSeekBarChangeListener{
     
     final static int LOAD_IMAGE = 1000;
     private static final String TAG = "Draw";
@@ -75,10 +68,10 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 
         mMasterBucket = (MasterBucket) findViewById(R.id.masterBucket);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         mSlateFragment = (SlateFragment)  fragmentManager.findFragmentById(R.id.slate_fragment);
 
-        ActionBar actionBar = this.getSupportActionBar();
+        ActionBar actionBar = this.getActionBar();
         View mActionBarView = getLayoutInflater().inflate(R.layout.action_bar_cv, null);
         actionBar.setCustomView(mActionBarView);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
@@ -130,14 +123,14 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-       MenuInflater inflater = getSupportMenuInflater();
+       MenuInflater inflater = getMenuInflater();
        inflater.inflate(R.menu.markers_activity, menu);
        return super.onCreateOptionsMenu(menu);
     }
     
     @Override
     public boolean onOptionsItemSelected(
-	    com.actionbarsherlock.view.MenuItem item) {
+	    MenuItem item) {
 	switch (item.getItemId()) {
 	case R.id.menu_back:
 	    clickUndo(null);
@@ -171,7 +164,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
     public boolean dispatchTouchEvent(MotionEvent event) {
 
         for (int i = 0; i < event.getPointerCount(); i++) {
-            if (event.getY(i) < this.getSupportActionBar().getHeight() +
+            if (event.getY(i) < this.getActionBar().getHeight() +
                     getResources().getDimension(R.dimen.notification_bar_height)) {
                 return super.dispatchTouchEvent(event);
             }
@@ -511,7 +504,7 @@ public class DrawActivity extends SherlockFragmentActivity  implements OnSeekBar
 	    mColorDialog = new ColorDialogFragment();
 	}
 	mColorDialog.mOldColor = mSlateFragment.mColor;
-	mColorDialog.show(this.getSupportFragmentManager(), "colorPicker");
+	mColorDialog.show(this.getFragmentManager(), "colorPicker");
     }
 
 }

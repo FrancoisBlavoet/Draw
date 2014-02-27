@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -34,12 +35,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.interactive.stroke.draw.utils.PreferenceConstants;
 import com.interactive.stroke.draw.utils.Rotation;
 
 
-public class SlateFragment extends SherlockFragment {
+public class SlateFragment extends Fragment {
     
     private static final boolean DEBUG = true;
     private static final String TAG = "Draw";

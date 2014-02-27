@@ -1,19 +1,18 @@
 package com.interactive.stroke.draw;
 
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener;
 import com.larswerkman.holocolorpicker.SaturationBar;
 import com.larswerkman.holocolorpicker.ValueBar;
 
-public class ColorDialogFragment extends SherlockDialogFragment implements OnColorChangedListener {
+public class ColorDialogFragment extends DialogFragment implements OnColorChangedListener {
 
     public ColorPicker mColorPicker;
     public SaturationBar mSaturation;

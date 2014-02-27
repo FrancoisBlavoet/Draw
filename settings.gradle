@@ -1,6 +1,4 @@
 include 'holoColorPicker'
-include ':actionBarSherlock'
 include ':draw'
 
 project(':holoColorPicker').projectDir = new File('../HoloColorPicker')
-project(':actionBarSherlock').projectDir = new File('../actionBarSherlock-Gradle')

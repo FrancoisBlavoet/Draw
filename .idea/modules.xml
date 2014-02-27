@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Draw.iml" filepath="$PROJECT_DIR$/Draw.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../actionBarSherlock-Gradle/actionBarSherlock.iml" filepath="$PROJECT_DIR$/../actionBarSherlock-Gradle/actionBarSherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/draw/draw.iml" filepath="$PROJECT_DIR$/draw/draw.iml" />
       <module fileurl="file://$PROJECT_DIR$/../HoloColorPicker/holoColorPicker.iml" filepath="$PROJECT_DIR$/../HoloColorPicker/holoColorPicker.iml" />
     </modules>
