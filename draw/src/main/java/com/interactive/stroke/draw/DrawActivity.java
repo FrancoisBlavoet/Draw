@@ -162,6 +162,7 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
     private boolean mIsAGestureOngoing = false;
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        Log.d("fbl","Dispatch : " + event.getDownTime());
 
         for (int i = 0; i < event.getPointerCount(); i++) {
             if (event.getY(i) < this.getActionBar().getHeight() +

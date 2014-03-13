@@ -1,6 +1,4 @@
 include 'holoColorPicker'
 include ':draw'
 
-apply from: 'modulesConfig.gradle'
-
 project(':holoColorPicker').projectDir = new File('../HoloColorPicker')
