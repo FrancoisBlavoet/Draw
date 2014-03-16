@@ -54,6 +54,8 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
     private ScaleGestureDetector mScaleDetector;
     private RotationGestureDetector mRotateDetector;
     private TranslationGestureDetector mTranslationDetector;
+    private boolean mIsAGestureOngoing = false;
+    private long lastCapturedEventTime = 0L;
 
     @Override
     public void onCreate(Bundle icicle) {
@@ -159,11 +161,9 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
         mSlateFragment.mSlate.setTranslationX(mTranslationX);
         mSlateFragment.mSlate.setTranslationY(mTranslationY);
     }
-    private boolean mIsAGestureOngoing = false;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        Log.d("fbl","Dispatch : " + event.getDownTime());
-
         for (int i = 0; i < event.getPointerCount(); i++) {
             if (event.getY(i) < this.getActionBar().getHeight() +
                     getResources().getDimension(R.dimen.notification_bar_height)) {
@@ -173,6 +173,7 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
         int actionMasked = event.getActionMasked();
         if (event.getPointerCount() > 1) {
             if (!mIsAGestureOngoing) {
+                lastCapturedEventTime = event.getDownTime();
                 mIsAGestureOngoing = true;
                 mSlateFragment.mSlate.finishStroke(event.getEventTime());
                 // decide if we need to cancel the ongoing stroke :
@@ -194,6 +195,9 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
             mIsAGestureOngoing = false;
         }
         if (mIsAGestureOngoing) {
+            return true;
+        }
+        if (event.getPointerCount() == 1 && lastCapturedEventTime == event.getDownTime()) {
             return true;
         }
         return super.dispatchTouchEvent(event);
@@ -340,7 +344,7 @@ public class DrawActivity extends Activity implements OnSeekBarChangeListener{
 	Intent startIntent = getIntent();
 	if (DEBUG)
 	    Log.d(TAG, "starting with intent=" + startIntent + " extras="
-		    + dumpBundle(startIntent.getExtras()));
+                + dumpBundle(startIntent.getExtras()));
 	String a = startIntent.getAction();
         if (a == null){
             return;
